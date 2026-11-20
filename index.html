@@ -8,15 +8,15 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#0b0f17">
 
-    <title>Smart Guide Eye v7 - AI FOR THAI Integration, 100% Thai Voice, Navigation &amp; Obstacle Guard</title>
+    <title>Smart Guide Eye v8 - AI FOR THAI, เสียงภาษาไทยแท้ 100%, แก้ไข/ย้ายความจำ AI &amp; นำทาง</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- TensorFlow.js, COCO-SSD, MobileNet & KNN Classifier (On-Device Vision Backbone ร่วมกับ AI FOR THAI) -->
+    <!-- TensorFlow.js, COCO-SSD, MobileNet & KNN Classifier -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.17.0/dist/tf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.3/dist/coco-ssd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@2.1.1/dist/mobilenet.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/knn-classifier@1.2.4/dist/knn-classifier.min.js"></script>
-    <!-- Tesseract.js (สำรองกรณีออฟไลน์หรือติด CORS เมื่อเรียก AI FOR THAI OCR) -->
+    <!-- Tesseract.js (ระบบอ่านอักษรภาษาไทยสำรองในเครื่อง) -->
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
     <!-- ฟอนต์ Prompt -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -110,7 +110,7 @@
         <span id="toast-msg">ดำเนินการเรียบร้อย</span>
     </div>
 
-    <!-- การ์ดหลัก: เรียบหรู ปุ่มใหญ่ ใช้งานง่ายสำหรับผู้พิการทางสายตา -->
+    <!-- การ์ดหลัก: โครงสร้างเดิม ปุ่มใหญ่ ใช้งานง่ายสำหรับผู้พิการทางสายตา -->
     <main id="main-app-card" class="w-full max-w-[470px] bg-surface/92 backdrop-blur-xl border border-borderLuxury rounded-[32px] p-5 sm:p-7 shadow-[0_24px_60px_rgba(0,0,0,0.65)]">
         
         <!-- ส่วนหัว -->
@@ -123,8 +123,8 @@
                     </svg>
                 </div>
                 <div>
-                    <h1 class="text-lg sm:text-xl font-semibold text-textPrimary tracking-tight">Smart Guide Eye <span class="text-xs text-goldAccent font-normal">v7</span></h1>
-                    <p class="text-[11px] text-textSecondary mt-0.5">AI FOR THAI • วาจา 9 เสียงไทย 100% • อ่านป้ายไทย • นำทาง</p>
+                    <h1 class="text-lg sm:text-xl font-semibold text-textPrimary tracking-tight">Smart Guide Eye <span class="text-xs text-goldAccent font-normal">v8</span></h1>
+                    <p class="text-[11px] text-textSecondary mt-0.5">AI FOR THAI • เสียงไทยแท้ 100% • แก้ไขความจำ AI • นำทาง</p>
                 </div>
             </div>
 
@@ -167,22 +167,22 @@
                 </div>
                 <div>
                     <span class="block text-base font-semibold text-goldAccent">ส่องกล้องเตือนสิ่งกีดขวาง &amp; อ่านป้ายไทย</span>
-                    <span class="block text-xs text-textSecondary mt-0.5">AI FOR THAI OCR + แปลไทย 100% + เสียงวาจา 9</span>
+                    <span class="block text-xs text-textSecondary mt-0.5">เสียงไทยแท้ 100% • บอกระยะเมตร • อ่านป้ายเตือน</span>
                 </div>
             </button>
 
-            <!-- ปุ่ม 1.5: จัดการความจำ AI (โหมดโฟกัสเทรน AI & บันทึกใบหน้าครอบครัว/เพื่อน) -->
+            <!-- ปุ่ม 1.5: จัดการความจำ AI (แก้ไข/ลบชื่อได้ + ส่งออกย้ายขึ้น Cloud ได้) -->
             <button type="button" id="btn-open-ai-memory" onclick="hapticTap(); openAiMemoryModal()" 
-                aria-label="บันทึกใบหน้าครอบครัว เพื่อน และสอน AI จดจำสิ่งกีดขวาง"
+                aria-label="เทรน AI แก้ไขชื่อ ลบ หรือย้ายข้อมูลไปเก็บใน Cloud"
                 class="w-full min-h-[56px] px-5 py-2.5 rounded-2xl bg-gradient-to-r from-sky-500/20 to-teal-500/15 hover:from-sky-500/30 hover:to-teal-500/25 active:scale-[0.99] border border-skyAccent/45 text-left flex items-center justify-between gap-3 transition-all cursor-pointer">
                 <div class="flex items-center gap-3.5">
                     <span class="text-2xl shrink-0" aria-hidden="true">🧠</span>
                     <div>
-                        <span class="block text-sm sm:text-base font-semibold text-skyAccent">เทรน AI &amp; บันทึกใบหน้าคนรู้จัก</span>
-                        <span id="ai-memory-summary-badge" class="block text-[11px] text-textSecondary mt-0.5">กดเทรนจะหยุดฟังก์ชันอื่นชั่วคราวไม่ให้บังปุ่ม</span>
+                        <span class="block text-sm sm:text-base font-semibold text-skyAccent">เทรน AI &amp; แก้ไข/ย้ายความจำ AI</span>
+                        <span id="ai-memory-summary-badge" class="block text-[11px] text-textSecondary mt-0.5">แก้ไขชื่อที่พิมพ์ผิด • ลบ • สำรองไฟล์ลง Cloud ได้</span>
                     </div>
                 </div>
-                <span class="text-xs px-2.5 py-1 rounded-lg bg-skyAccent/15 text-skyAccent font-semibold shrink-0">เทรน AI ➔</span>
+                <span class="text-xs px-2.5 py-1 rounded-lg bg-skyAccent/15 text-skyAccent font-semibold shrink-0">จัดการ ➔</span>
             </button>
 
             <!-- ปุ่ม 2: บอกสถานที่ปัจจุบัน & พูดจุดหมายปลายทางนำทาง -->
@@ -295,7 +295,7 @@
         <section class="mt-3 bg-obsidian/75 border border-borderLuxury rounded-2xl p-3" aria-live="polite">
             <div class="flex items-center gap-2.5 text-xs text-textSecondary">
                 <span class="w-2 h-2 rounded-full bg-goldAccent shrink-0" aria-hidden="true"></span>
-                <span id="status" class="leading-relaxed">พร้อมใช้งาน v7: เชื่อมต่อ AI FOR THAI (อ่านป้ายไทย OCR + แปลไทย + สังเคราะห์เสียงวาจา 9) แจ้งเตือนภาษาไทยเท่านั้น</span>
+                <span id="status" class="leading-relaxed">พร้อมใช้งาน v8: เสียงพูดภาษาไทยแท้ 100% + AI FOR THAI + แก้ไข/ลบ/ย้ายความจำ AI ลง Cloud</span>
             </div>
         </section>
 
@@ -377,7 +377,7 @@
             <div class="flex items-center justify-between pb-3 border-b border-borderLuxury">
                 <div>
                     <h2 id="hazard-modal-title" class="text-lg font-semibold text-textPrimary">กล้องเตือนสิ่งกีดขวาง &amp; ระยะเมตร</h2>
-                    <p id="hazard-subtitle-mode" class="text-xs text-textSecondary mt-0.5">AI FOR THAI: อ่านป้ายไทย + แปลภาษาไทย 100% + เสียงวาจา 9</p>
+                    <p id="hazard-subtitle-mode" class="text-xs text-textSecondary mt-0.5">เสียงพูดภาษาไทยแท้ 100% + AI FOR THAI OCR + แปลไทย</p>
                 </div>
                 <button type="button" onclick="hapticTap(); closeHazardScannerModal()" aria-label="ปิดกล้องส่องทาง"
                     class="min-w-[48px] min-h-[48px] rounded-2xl bg-surfaceElevated hover:bg-white/10 text-textPrimary text-base font-semibold flex items-center justify-center cursor-pointer border border-borderLuxury">
@@ -420,7 +420,7 @@
                 <video id="hazard-video" autoplay playsinline muted class="w-full h-full object-cover"></video>
                 <canvas id="hazard-overlay-canvas" class="absolute inset-0 w-full h-full object-cover pointer-events-none"></canvas>
                 <div id="scanner-reticle-box" class="absolute inset-x-10 inset-y-7 border-2 border-dashed border-goldAccent/55 rounded-xl pointer-events-none flex items-end justify-center pb-1">
-                    <span class="text-[10px] bg-obsidian/80 text-goldAccent px-2 py-0.5 rounded">เล็งสิ่งกีดขวางในกรอบ (แจ้งเตือนภาษาไทยเท่านั้น)</span>
+                    <span class="text-[10px] bg-obsidian/80 text-goldAccent px-2 py-0.5 rounded">เล็งสิ่งกีดขวางในกรอบ (เสียงภาษาไทยเท่านั้น)</span>
                 </div>
                 <div id="scanner-laser-line" class="scanner-laser" aria-hidden="true"></div>
 
@@ -442,7 +442,7 @@
 
                 <div class="absolute top-3 left-3 px-3 py-1 rounded-full bg-obsidian/80 border border-borderLuxury text-[11px] text-goldAccent flex items-center gap-2 z-10">
                     <span id="scan-status-dot" class="w-2 h-2 rounded-full bg-tealAccent animate-pulse"></span>
-                    <span id="hazard-scan-status">กำลังเตรียมกล้องและ AI FOR THAI...</span>
+                    <span id="hazard-scan-status">กำลังเตรียมกล้องและเสียงภาษาไทย...</span>
                 </div>
             </div>
 
@@ -517,15 +517,15 @@
     </div>
 
     <!-- ===================================================================== -->
-    <!-- MODAL 1.5: โหมดโฟกัสเทรน AI & บันทึกใบหน้าครอบครัว/เพื่อน -->
+    <!-- MODAL 1.5: โหมดจัดการความจำ AI (เพิ่ม / แก้ไขชื่อที่พิมพ์ผิด / ลบ / ส่งออก-นำเข้า Cloud) -->
     <!-- ===================================================================== -->
     <div id="ai-memory-modal" role="dialog" aria-modal="true" aria-labelledby="ai-mem-title" onclick="closeAiMemoryModal()" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/92 backdrop-blur-md p-4">
         <div class="w-full max-w-[460px] bg-surface border-2 border-skyAccent/50 rounded-[32px] p-5 sm:p-6 shadow-2xl max-h-[94dvh] overflow-y-auto" onclick="event.stopPropagation()">
             
             <div class="flex items-center justify-between pb-3.5 border-b border-borderLuxury">
                 <div>
-                    <span class="text-[10px] px-2 py-0.5 rounded bg-skyAccent/20 text-skyAccent font-bold">โหมดบันทึกความจำ AI</span>
-                    <h2 id="ai-mem-title" class="text-lg font-semibold text-skyAccent mt-0.5">เทรน AI &amp; บันทึกใบหน้าคนรู้จัก</h2>
+                    <span class="text-[10px] px-2 py-0.5 rounded bg-skyAccent/20 text-skyAccent font-bold">เก็บในเครื่อง &amp; สำรองขึ้น Cloud</span>
+                    <h2 id="ai-mem-title" class="text-lg font-semibold text-skyAccent mt-0.5">เทรน AI &amp; แก้ไข/ลบข้อมูลที่สอน</h2>
                 </div>
                 <button type="button" onclick="hapticTap(); closeAiMemoryModal()" aria-label="ปิดหน้าต่างเทรน AI"
                     class="min-w-[48px] min-h-[48px] rounded-2xl bg-surfaceElevated hover:bg-white/10 text-textPrimary text-base font-semibold flex items-center justify-center cursor-pointer border border-borderLuxury">
@@ -583,12 +583,27 @@
                 </button>
             </div>
 
+            <!-- ส่วนจัดการรายการที่เทรนไว้: แก้ไขชื่อที่พิมพ์ผิด / ลบ / ส่งออก-นำเข้า Cloud -->
             <div class="mt-4">
                 <div class="flex items-center justify-between mb-2">
-                    <h3 class="text-xs font-semibold text-textSecondary">รายการที่ AI จดจำไว้ในเครื่อง (<span id="trained-items-count">0</span> รายการ):</h3>
+                    <h3 class="text-xs font-semibold text-textSecondary">รายการในเครื่อง (<span id="trained-items-count">0</span> รายการ) — แก้ไข/ลบได้:</h3>
                     <button type="button" onclick="clearAllTrainedMemory()" class="text-[11px] text-rose-400 hover:underline cursor-pointer">ล้างทั้งหมด</button>
                 </div>
-                <div id="trained-memory-list" class="max-h-[165px] overflow-y-auto space-y-2 pr-1"></div>
+
+                <!-- ปุ่มย้ายข้อมูลขึ้น Cloud / นำเข้าจาก Cloud -->
+                <div class="grid grid-cols-2 gap-2 mb-2.5">
+                    <button type="button" onclick="hapticTap(); exportTrainedMemoryToCloudFile()" 
+                        class="min-h-[40px] px-3 py-1.5 rounded-xl bg-tealAccent/15 hover:bg-tealAccent/25 border border-tealAccent/40 text-tealAccent text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer">
+                        <span>☁️ ส่งออกไฟล์ไป Cloud</span>
+                    </button>
+                    <input type="file" id="import-memory-json-input" accept=".json,application/json" class="hidden" onchange="importTrainedMemoryFromCloudFile(event)">
+                    <button type="button" onclick="hapticTap(); document.getElementById('import-memory-json-input').click()" 
+                        class="min-h-[40px] px-3 py-1.5 rounded-xl bg-goldAccent/15 hover:bg-goldAccent/25 border border-goldAccent/40 text-goldAccent text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer">
+                        <span>📥 นำเข้าไฟล์จาก Cloud</span>
+                    </button>
+                </div>
+
+                <div id="trained-memory-list" class="max-h-[185px] overflow-y-auto space-y-2 pr-1"></div>
             </div>
 
         </div>
@@ -736,7 +751,7 @@
 
     <script>
         // =====================================================================
-        // การตั้งค่า AI FOR THAI API (NECTEC / สวทช.)
+        // การตั้งค่า AI FOR THAI API (NECTEC / สวทช.) - osp_web Key
         // =====================================================================
         const AI_FOR_THAI_API_KEY = "21KfHVJmWfPCBDPkqX47oO43HBxoNM3e";
         const AFT_ENDPOINTS = {
@@ -754,7 +769,7 @@
         let isScannerPausedByUser = false;
         let currentSosFullMessage = "";
 
-        // เกณฑ์ความมั่นใจขั้นต่ำของ AI และการสืบค้นภาษาไทยเมื่อ < 65%
+        // เกณฑ์ความมั่นใจขั้นต่ำของ AI
         const AI_MIN_CONFIDENCE = 0.65;
         const AUTO_RESEARCH_MIN_CONF = 0.25;
         const CUSTOM_MATCH_THRESHOLD = 0.62;
@@ -762,7 +777,8 @@
         const OCR_INTERVAL_MS = 3800;
         const NEW_HAZARD_COOLDOWN_MS = 1200;
         const SAME_HAZARD_REPEAT_MS = 6500;
-        const KNN_STORAGE_KEY = 'smart_guide_eye_knn_memory_v7';
+        const KNN_STORAGE_KEY = 'smart_guide_eye_knn_memory_v8';
+        const LEGACY_STORAGE_KEYS = ['smart_guide_eye_knn_memory_v7'];
         const BACKGROUND_CLASS_KEY = 'BACKGROUND::NORMAL_PATH';
 
         // ฐานข้อมูลสถานีรถไฟฟ้า BTS และ MRT ครบทุกสายหลักและส่วนต่อขยาย
@@ -986,7 +1002,7 @@
             { keys: ['fence', 'picket', 'chainlink', 'bannister', 'handrail', 'grille', 'railing'], th: 'รั้วเหล็กหรือราวกันตก' },
             { keys: ['pole', 'post', 'beacon', 'street sign', 'mast', 'flagpole', 'stanchion', 'pillar'], th: 'เสาป้ายหรือเสาไฟฟ้า' },
             { keys: ['ashcan', 'trash', 'garbage', 'bin', 'wastebin', 'bucket', 'pail', 'barrel', 'drum'], th: 'ถังขยะหรือถังน้ำขวางทาง' },
-            { keys: ['carton', 'crate', 'box', 'cardboard', 'chest', 'hamper', 'basket', 'bin'], th: 'กล่องพัสดุหรือตะกร้าวางขวางทาง' },
+            { keys: ['carton', 'crate', 'box', 'cardboard', 'chest', 'hamper', 'basket'], th: 'กล่องพัสดุหรือตะกร้าวางขวางทาง' },
             { keys: ['clothes', 'hanger', 'wardrobe', 'rack', 'ironing', 'laundry'], th: 'ราวตากผ้าหรือชั้นแขวนผ้า' },
             { keys: ['pot', 'flowerpot', 'vase', 'planter', 'tree', 'shrub', 'bush', 'plant', 'flower'], th: 'กระถางต้นไม้หรือพุ่มไม้' },
             { keys: ['door', 'sliding door', 'shoji', 'screen', 'turnstile', 'gate', 'entrance'], th: 'ประตูหรือแผงกั้นทางเข้า' },
@@ -1065,13 +1081,32 @@
             loadThaiVoicePreference();
         });
 
+        // =====================================================================
+        // ค้นหาและล็อกเสียงสังเคราะห์ภาษาไทย (th-TH) ของอุปกรณ์อย่างเข้มงวด
+        // =====================================================================
+        function getStrictThaiSystemVoice() {
+            if (!('speechSynthesis' in window)) return null;
+            try {
+                const voices = window.speechSynthesis.getVoices() || [];
+                if (voices.length === 0) return cachedThaiVoice;
+
+                // ลำดับความสำคัญ: 1. th-TH ตรงตัว 2. ขึ้นต้นด้วย th 3. ชื่อเสียงมีคำว่า Thai / ไทย / Premwadee / Pattara / Kanya / Narisa
+                const exactTh = voices.find(v => v.lang && v.lang.toLowerCase() === 'th-th');
+                if (exactTh) return exactTh;
+
+                const prefixTh = voices.find(v => v.lang && v.lang.toLowerCase().startsWith('th'));
+                if (prefixTh) return prefixTh;
+
+                const namedTh = voices.find(v => v.name && /(thai|ไทย|premwadee|pattara|kanya|narisa|niwat)/i.test(v.name));
+                if (namedTh) return namedTh;
+            } catch (e) {}
+            return null;
+        }
+
         function loadThaiVoicePreference() {
             if (!('speechSynthesis' in window)) return;
             const pickVoice = () => {
-                try {
-                    const voices = window.speechSynthesis.getVoices() || [];
-                    cachedThaiVoice = voices.find(v => v.lang && v.lang.toLowerCase().includes('th')) || null;
-                } catch (e) {}
+                cachedThaiVoice = getStrictThaiSystemVoice();
             };
             pickVoice();
             window.speechSynthesis.onvoiceschanged = pickVoice;
@@ -1086,8 +1121,12 @@
         }
 
         // =====================================================================
-        // ฟังก์ชันกรองข้อความให้เป็นภาษาไทย 100% เท่านั้น (ป้องกันภาษาอังกฤษหลุดออกเสียง)
+        // ฟังก์ชันกรองข้อความให้เป็นภาษาไทยแท้ 100% เท่านั้น (ห้ามมีภาษาอังกฤษและสัญลักษณ์)
         // =====================================================================
+        function formatThaiNumberSpeech(str) {
+            return String(str).replace(/(\d+)\.(\d+)/g, '$1 จุด $2');
+        }
+
         function sanitizeToStrictThaiOnly(rawText, fallbackThai = "สิ่งกีดขวางไม่ทราบชนิด") {
             if (!rawText) return fallbackThai;
             let text = String(rawText);
@@ -1096,17 +1135,25 @@
             text = text
                 .replace(/\bBTS\b/gi, 'บีทีเอส')
                 .replace(/\bMRT\b/gi, 'เอ็มอาร์ที')
+                .replace(/\bBRT\b/gi, 'บีอาร์ที')
                 .replace(/\bSOS\b/gi, 'เอสโอเอส')
                 .replace(/\bGPS\b/gi, 'จีพีเอส')
                 .replace(/\bAI\b/gi, 'เอไอ')
                 .replace(/\bOCR\b/gi, 'โอซีอาร์')
                 .replace(/\bLINE\b/gi, 'ไลน์')
-                .replace(/\bWi-Fi\b/gi, 'ไวไฟ');
+                .replace(/\bWi-Fi\b/gi, 'ไวไฟ')
+                .replace(/\bMBK\b/gi, 'เอ็มบีเค');
 
-            // ลบอักขระภาษาอังกฤษ A-Z ออกทั้งหมด เพื่อให้เหลือเฉพาะภาษาไทย ตัวเลข และเครื่องหมายวรรคตอนพื้นฐาน
-            text = text.replace(/[a-zA-Z]+/g, ' ').replace(/\s+/g, ' ').trim();
+            // แปลงจุดทศนิยมเป็นคำว่า "จุด"
+            text = formatThaiNumberSpeech(text);
 
-            // ตรวจสอบว่ามีอักษรไทยอย่างน้อย 1 ตัวหรือไม่
+            // ลบอักขระภาษาอังกฤษ A-Z และสัญลักษณ์พิเศษออกทั้งหมด เหลือเฉพาะภาษาไทย ตัวเลข และช่องว่าง
+            text = text
+                .replace(/[a-zA-Z]+/g, ' ')
+                .replace(/[^\u0E00-\u0E7F0-9\s]/g, ' ')
+                .replace(/\s+/g, ' ')
+                .trim();
+
             if (!/[\u0E00-\u0E7F]/.test(text)) {
                 return fallbackThai;
             }
@@ -1145,11 +1192,21 @@
         }
 
         // =====================================================================
-        // 1. ระบบเทรน AI กลับ (โหมดโฟกัสเทรน AI + บันทึกความจำในเครื่อง)
+        // 1. ระบบความจำ AI (บันทึก / แก้ไขชื่อที่พิมพ์ผิด / ลบ / ส่งออก-นำเข้า Cloud)
         // =====================================================================
         function restoreKnnMemoryFromStorage() {
             try {
-                const rawJson = localStorage.getItem(KNN_STORAGE_KEY);
+                let rawJson = localStorage.getItem(KNN_STORAGE_KEY);
+                if (!rawJson) {
+                    for (const legacyKey of LEGACY_STORAGE_KEYS) {
+                        const oldData = localStorage.getItem(legacyKey);
+                        if (oldData) {
+                            rawJson = oldData;
+                            localStorage.setItem(KNN_STORAGE_KEY, oldData);
+                            break;
+                        }
+                    }
+                }
                 if (!rawJson || !knnClassifierModel) return;
 
                 const parsed = JSON.parse(rawJson);
@@ -1189,7 +1246,7 @@
                 }));
                 updateAiMemorySummaryBadge();
             } catch (e) {
-                showToast('หน่วยความจำเต็ม แนะนำให้ลบรายการเก่าบางส่วน');
+                showToast('หน่วยความจำเต็ม แนะนำให้สำรองไฟล์ลง Cloud แล้วลบรายการเก่า');
             }
         }
 
@@ -1199,9 +1256,9 @@
             if (countEl) countEl.innerText = trainedMemoryMeta.length;
             if (badge) {
                 if (trainedMemoryMeta.length > 0) {
-                    badge.innerText = `จำข้อมูลไว้แล้ว ${trainedMemoryMeta.length} รายการ (กดเทรนจะโฟกัสเฉพาะการเทรน)`;
+                    badge.innerText = `จำข้อมูลไว้ ${trainedMemoryMeta.length} รายการ (แก้ไขชื่อ / ลบ / ส่งออก Cloud ได้)`;
                 } else {
-                    badge.innerText = 'กดเทรนจะหยุดฟังก์ชันอื่นชั่วคราวไม่ให้บังปุ่ม';
+                    badge.innerText = 'แก้ไขชื่อที่พิมพ์ผิด • ลบ • สำรองไฟล์ลง Cloud ได้';
                 }
             }
         }
@@ -1270,6 +1327,116 @@
             }
 
             persistKnnMemoryToStorage();
+        }
+
+        // ฟังก์ชันแก้ไขชื่อรายการที่เทรนผิด (ย้ายเวกเตอร์ Tensor ไปชื่อใหม่ทันทีโดยไม่ต้องเทรนซ้ำ)
+        function editTrainedMemoryItem(index) {
+            const item = trainedMemoryMeta[index];
+            if (!item) return;
+
+            const newRawName = window.prompt(`แก้ไขชื่อภาษาไทยสำหรับ "${item.displayName}":`, item.displayName);
+            if (newRawName === null) return; // กดยกเลิก
+
+            const cleanNewThaiName = sanitizeToStrictThaiOnly(newRawName, '');
+            if (!cleanNewThaiName) {
+                showToast('กรุณาระบุชื่อภาษาไทยที่ถูกต้อง');
+                speakThaiText('กรุณาระบุชื่อภาษาไทยที่ถูกต้องครับ', true);
+                return;
+            }
+
+            if (cleanNewThaiName === item.displayName) return;
+
+            const oldLabelKey = item.labelKey;
+            const newLabelKey = `${item.category}::${cleanNewThaiName}`;
+
+            try {
+                if (knnClassifierModel) {
+                    const dataset = knnClassifierModel.getClassifierDataset();
+                    if (dataset[oldLabelKey]) {
+                        const oldTensor = dataset[oldLabelKey];
+                        if (dataset[newLabelKey]) {
+                            dataset[newLabelKey] = tf.concat([dataset[newLabelKey], oldTensor], 0);
+                        } else {
+                            dataset[newLabelKey] = oldTensor.clone();
+                        }
+                        knnClassifierModel.setClassifierDataset(dataset);
+                        knnClassifierModel.clearClass(oldLabelKey);
+                    }
+                }
+            } catch (e) {
+                console.warn('Rename tensor warning:', e);
+            }
+
+            // อัปเดตข้อมูล Meta
+            const duplicateIdx = trainedMemoryMeta.findIndex((m, i) => i !== index && m.labelKey === newLabelKey);
+            if (duplicateIdx !== -1) {
+                trainedMemoryMeta[duplicateIdx].sampleCount += (item.sampleCount || 2);
+                trainedMemoryMeta.splice(index, 1);
+            } else {
+                item.labelKey = newLabelKey;
+                item.displayName = cleanNewThaiName;
+            }
+
+            lastSpokenHazardText = "";
+            persistKnnMemoryToStorage();
+            renderTrainedMemoryList();
+            showToast(`แก้ไขชื่อเป็น "${cleanNewThaiName}" เรียบร้อย`);
+            speakThaiText(`แก้ไขชื่อเป็น ${cleanNewThaiName} เรียบร้อยแล้วครับ`, true);
+        }
+
+        // ฟังก์ชันส่งออกไฟล์ความจำ AI (.json) เพื่อย้ายไปเก็บใน Cloud ของผู้ใช้เอง
+        function exportTrainedMemoryToCloudFile() {
+            if (trainedMemoryMeta.length === 0) {
+                showToast('ยังไม่มีข้อมูลที่เทรนไว้สำหรับส่งออก');
+                speakThaiText('ยังไม่มีข้อมูลที่เทรนไว้สำหรับส่งออกครับ', true);
+                return;
+            }
+            persistKnnMemoryToStorage();
+            const rawJson = localStorage.getItem(KNN_STORAGE_KEY);
+            if (!rawJson) return;
+
+            const blob = new Blob([rawJson], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            const dateTag = new Date().toISOString().slice(0, 10);
+            a.href = url;
+            a.download = `smart_guide_eye_memory_${dateTag}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            showToast('ดาวน์โหลดไฟล์ความจำ AI สำเร็จ สามารถอัปโหลดขึ้น Cloud ได้ทันที');
+            speakThaiText('ส่งออกไฟล์ความจำเอไอเรียบร้อยแล้ว สามารถนำไปเก็บไว้ในคลาวด์ของคุณได้เลยครับ', true);
+        }
+
+        // ฟังก์ชันนำเข้าไฟล์ความจำ AI (.json) จาก Cloud ของผู้ใช้
+        function importTrainedMemoryFromCloudFile(event) {
+            const file = event.target.files && event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                try {
+                    const parsed = JSON.parse(e.target.result);
+                    if (!parsed || !parsed.dataset || !Array.isArray(parsed.meta)) {
+                        throw new Error('รูปแบบไฟล์ไม่ถูกต้อง');
+                    }
+                    if (!knnClassifierModel) {
+                        await initAllAiModelsAndMemory();
+                    }
+                    localStorage.setItem(KNN_STORAGE_KEY, JSON.stringify(parsed));
+                    restoreKnnMemoryFromStorage();
+                    renderTrainedMemoryList();
+                    showToast(`นำเข้าข้อมูลจาก Cloud สำเร็จ (${trainedMemoryMeta.length} รายการ)`);
+                    speakThaiText(`นำเข้าข้อมูลความจำเอไอจากคลาวด์สำเร็จ จำนวน ${trainedMemoryMeta.length} รายการครับ`, true);
+                } catch (err) {
+                    showToast('ไฟล์ไม่ถูกต้อง กรุณาเลือกไฟล์ความจำที่ส่งออกจากแอป');
+                    speakThaiText('ไม่สามารถนำเข้าไฟล์ได้ กรุณาเลือกไฟล์ความจำที่ส่งออกจากแอปครับ', true);
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = '';
         }
 
         function suspendBackgroundScannersForTraining() {
@@ -1386,7 +1553,7 @@
             modal.classList.remove('hidden');
             modal.classList.add('flex');
             renderTrainedMemoryList();
-            speakThaiText('เปิดโหมดเทรนเอไอและบันทึกใบหน้าคนรู้จัก หยุดการทำงานอื่นชั่วคราวแล้วครับ', true);
+            speakThaiText('เปิดหน้าจัดการความจำเอไอ สามารถเพิ่ม แก้ไขชื่อ ลบ หรือส่งออกไฟล์ไปคลาวด์ได้ครับ', true);
         }
 
         function closeAiMemoryModal() {
@@ -1464,29 +1631,35 @@
             if (!container) return;
 
             if (trainedMemoryMeta.length === 0) {
-                container.innerHTML = '<p class="text-xs text-textSecondary text-center py-4">ยังไม่มีรายการที่สอน AI สามารถเพิ่มด้านบนได้ทันที</p>';
+                container.innerHTML = '<p class="text-xs text-textSecondary text-center py-4">ยังไม่มีรายการที่สอน AI สามารถเพิ่มด้านบนหรือนำเข้าจาก Cloud ได้</p>';
                 return;
             }
 
             container.innerHTML = '';
             trainedMemoryMeta.forEach((item, index) => {
                 const row = document.createElement('div');
-                row.className = 'flex items-center justify-between gap-3 bg-obsidian/80 border border-borderLuxury rounded-xl p-2.5';
-                const iconTag = item.category === 'PERSON' ? '👤' : (item.relation.includes('สืบค้น') ? '🌐' : '🚧');
+                row.className = 'flex items-center justify-between gap-2 bg-obsidian/80 border border-borderLuxury rounded-xl p-2.5';
+                const iconTag = item.category === 'PERSON' ? '👤' : (item.relation.includes('แปล') ? '🌐' : '🚧');
                 const safeDisplay = sanitizeToStrictThaiOnly(item.displayName, 'วัตถุที่บันทึกไว้');
 
                 row.innerHTML = `
-                    <div class="flex items-center gap-2.5 min-w-0">
+                    <div class="flex items-center gap-2.5 min-w-0 flex-grow">
                         ${item.thumb ? `<img src="${item.thumb}" alt="${safeDisplay}" class="w-10 h-10 rounded-lg object-cover bg-black shrink-0">` : `<div class="w-10 h-10 rounded-lg bg-surfaceElevated flex items-center justify-center shrink-0">${iconTag}</div>`}
                         <div class="min-w-0">
                             <span class="block text-sm font-semibold text-textPrimary truncate">${iconTag} ${safeDisplay}</span>
-                            <span class="block text-[10px] text-tealAccent">${item.relation} • เทรนแล้ว ${item.sampleCount || 1} ตัวอย่าง</span>
+                            <span class="block text-[10px] text-tealAccent truncate">${item.relation} • ${item.sampleCount || 1} ตัวอย่าง</span>
                         </div>
                     </div>
-                    <button type="button" onclick="deleteTrainedMemoryItem(${index})" aria-label="ลบ ${safeDisplay}"
-                        class="px-2.5 py-1.5 rounded-lg bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 text-xs font-medium cursor-pointer shrink-0">
-                        ลบ
-                    </button>
+                    <div class="flex items-center gap-1.5 shrink-0">
+                        <button type="button" onclick="editTrainedMemoryItem(${index})" aria-label="แก้ไขชื่อ ${safeDisplay}"
+                            class="px-2.5 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 text-xs font-medium cursor-pointer">
+                            ✏️ แก้ไข
+                        </button>
+                        <button type="button" onclick="deleteTrainedMemoryItem(${index})" aria-label="ลบ ${safeDisplay}"
+                            class="px-2.5 py-1.5 rounded-lg bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 text-xs font-medium cursor-pointer">
+                            ลบ
+                        </button>
+                    </div>
                 `;
                 container.appendChild(row);
             });
@@ -1500,10 +1673,13 @@
                     knnClassifierModel.clearClass(item.labelKey);
                 }
             } catch (e) {}
+            const deletedName = item.displayName;
             trainedMemoryMeta.splice(index, 1);
+            lastSpokenHazardText = "";
             persistKnnMemoryToStorage();
             renderTrainedMemoryList();
-            showToast(`ลบ "${item.displayName}" ออกจากความจำ AI แล้ว`);
+            showToast(`ลบ "${deletedName}" ออกจากความจำ AI แล้ว`);
+            speakThaiText(`ลบ ${deletedName} ออกจากความจำเอไอแล้วครับ`, true);
         }
 
         function clearAllTrainedMemory() {
@@ -1512,16 +1688,15 @@
             } catch (e) {}
             trainedMemoryMeta = [];
             autoResearchCache.clear();
+            lastSpokenHazardText = "";
             localStorage.removeItem(KNN_STORAGE_KEY);
             renderTrainedMemoryList();
-            showToast('ล้างความจำที่สอน AI ทั้งหมดแล้ว');
+            showToast('ล้างความจำที่สอน AI ทั้งหมดในเครื่องแล้ว');
+            speakThaiText('ล้างความจำที่สอนเอไอทั้งหมดในเครื่องเรียบร้อยแล้วครับ', true);
         }
 
         // =====================================================================
-        // 2. บริการ AI FOR THAI จริง:
-        //    (ก) แปลภาษาอังกฤษ -> ไทย (XiaoFan EN-TH API) + คลังศัพท์ไทย 100%
-        //    (ข) อ่านตัวอักษรภาษาไทย (AI FOR THAI Thai OCR API)
-        //    (ค) สังเคราะห์เสียงภาษาไทย (AI FOR THAI VAJA9 TTS API)
+        // 2. บริการ AI FOR THAI จริง (แปลไทย + อ่านป้ายไทย + เสียงภาษาไทย 100%)
         // =====================================================================
         function mapEnglishLabelToThai(rawEnglishLabel) {
             if (!rawEnglishLabel) return null;
@@ -1534,7 +1709,6 @@
             return null;
         }
 
-        // เรียก AI FOR THAI Machine Translation (EN -> TH) เพื่อแปลชื่อวัตถุเป็นภาษาไทยแท้
         async function translateWithAiForThaiEn2Th(englishWord, timeoutMs = 850) {
             if (!navigator.onLine || !englishWord) return null;
             const controller = new AbortController();
@@ -1564,18 +1738,13 @@
         }
 
         async function resolveStrictThaiObjectName(englishTerm, thaiHint) {
-            // 1. หากมีคำแปลในพจนานุกรมภาษาไทยที่แม่นยำแล้ว ให้ใช้ทันที
             if (thaiHint) {
                 return sanitizeToStrictThaiOnly(thaiHint, 'สิ่งกีดขวางตรงหน้า');
             }
-
-            // 2. เรียกใช้ AI FOR THAI EN-TH API เพื่อแปลชื่อวัตถุเป็นภาษาไทย
             const aftTranslated = await translateWithAiForThaiEn2Th(englishTerm, 850);
             if (aftTranslated) {
                 return aftTranslated;
             }
-
-            // 3. หากไม่สามารถแปลได้ ห้ามส่งคืนภาษาอังกฤษเด็ดขาด ให้ใช้คำเตือนภาษาไทยมาตรฐาน
             return 'สิ่งกีดขวางไม่ทราบชนิด';
         }
 
@@ -1622,16 +1791,14 @@
                 };
             }
 
-            // แปลเป็นภาษาไทย 100% ผ่านพจนานุกรม + AI FOR THAI EN-TH
             const thaiDictHint = mapEnglishLabelToThai(topMobileNetPred ? topMobileNetPred.className : rawEnglishLabel);
             const resolvedThaiName = await resolveStrictThaiObjectName(rawEnglishLabel, thaiDictHint);
 
-            // บันทึกเข้าสู่ความจำ KNN Classifier อัตโนมัติเฉพาะเมื่อได้ชื่อเฉพาะเจาะจง
             try {
                 if (knnClassifierModel && resolvedThaiName && resolvedThaiName !== 'สิ่งกีดขวางไม่ทราบชนิด') {
                     const labelKey = `OBJECT::${resolvedThaiName}`;
                     const thumbUrl = cropCanvas.toDataURL('image/jpeg', 0.65);
-                    await addMultiAngleExampleToKnn(cropCanvas, labelKey, resolvedThaiName, 'OBJECT', 'AI FOR THAI แปลไทยอัตโนมัติ', thumbUrl);
+                    await addMultiAngleExampleToKnn(cropCanvas, labelKey, resolvedThaiName, 'OBJECT', 'แปลไทยอัตโนมัติ', thumbUrl);
                 }
             } catch (e) {}
 
@@ -1680,7 +1847,6 @@
                 if (!response.ok) return null;
                 const data = await response.json();
 
-                // รองรับโครงสร้างผลลัพธ์ของ AI FOR THAI OCR ทั้งแบบ result / text / ocr
                 let extractedText = '';
                 if (typeof data.result === 'string') extractedText = data.result;
                 else if (Array.isArray(data.result)) extractedText = data.result.map(r => r.text || r).join(' ');
@@ -1706,7 +1872,6 @@
                 let rawText = await callAiForThaiOcr(processedCanvas);
                 let usedAftOcr = Boolean(rawText);
 
-                // หากออฟไลน์หรือ API ไม่ตอบสนอง ใช้ระบบอ่านอักษรในเครื่องสำรอง (เฉพาะภาษาไทย)
                 if (!rawText && typeof Tesseract !== 'undefined') {
                     const result = await Tesseract.recognize(processedCanvas, 'tha', { logger: () => {} });
                     const confidence = (result && result.data && typeof result.data.confidence === 'number') ? result.data.confidence : 0;
@@ -1716,9 +1881,8 @@
                 }
 
                 if (rawText) {
-                    // กรองเอาเฉพาะภาษาไทยและตัวเลขเท่านั้น ห้ามมีภาษาอังกฤษปน
                     const strictThaiSign = sanitizeToStrictThaiOnly(
-                        rawText.replace(/[^\u0E00-\u0E7F0-9\s\-\/\.]/g, ' '),
+                        rawText.replace(/[^\u0E00-\u0E7F0-9\s]/g, ' '),
                         ''
                     );
 
@@ -1737,7 +1901,7 @@
                             const shortSignContent = strictThaiSign.slice(0, 40);
                             const signAnnouncement = `พบ${ruleType} ${shortSignContent}`;
 
-                            latestDetectedSignText = `${ruleIcon} ${ruleType} (${usedAftOcr ? 'AI FOR THAI' : 'ในเครื่อง'}): ${shortSignContent}`;
+                            latestDetectedSignText = `${ruleIcon} ${ruleType} (${usedAftOcr ? 'เอไอไทย' : 'ในเครื่อง'}): ${shortSignContent}`;
                             latestDetectedSignExpires = Date.now() + 6500;
                             document.getElementById('hazard-alert-text').innerText = signAnnouncement;
 
@@ -1757,14 +1921,14 @@
         }
 
         // =====================================================================
-        // (ค) บริการสังเคราะห์เสียงภาษาไทยจริงของ AI FOR THAI (VAJA9 TTS)
-        //     พร้อมระบบเสียงไทยในเครื่อง (th-TH) รองรับทันทีเมื่อเครือข่ายช้าหรือออฟไลน์
+        // (ค) ระบบสังเคราะห์เสียงภาษาไทยแท้ 100% (AI FOR THAI VAJA9 + ระบบเสียงไทยในเครื่อง)
+        //     แก้ปัญหาเสียงต่างชาติอ่านภาษาไทยไม่ออกอย่างเด็ดขาด
         // =====================================================================
         async function callAiForThaiVaja9Tts(thaiText) {
             if (!navigator.onLine || !thaiText) return null;
 
             const controller = new AbortController();
-            const timerId = setTimeout(() => controller.abort(), 2400);
+            const timerId = setTimeout(() => controller.abort(), 2200);
 
             try {
                 const response = await fetch(AFT_ENDPOINTS.VAJA9_TTS, {
@@ -1840,7 +2004,7 @@
             if (!rawText) return;
             if (!isAutoSpeakEnabled && !interruptCurrent) return;
 
-            // บังคับกรองข้อความให้เป็นภาษาไทย 100% เท่านั้นก่อนส่งออกเสียงทุกครั้ง
+            // บังคับกรองข้อความให้เป็นภาษาไทยแท้ 100% เท่านั้นก่อนส่งออกเสียงทุกครั้ง
             const strictThaiSpeech = sanitizeToStrictThaiOnly(rawText, 'ระวังสิ่งกีดขวางตรงหน้าครับ');
 
             if (isCurrentlySpeaking && (Date.now() - speechStartedAt > 4200)) {
@@ -1853,7 +2017,7 @@
             const statusBadge = document.getElementById('speech-engine-status');
             isCurrentlySpeaking = true;
             speechStartedAt = Date.now();
-            if (statusBadge) statusBadge.innerText = '🗣️ กำลังสังเคราะห์เสียงไทย...';
+            if (statusBadge) statusBadge.innerText = '🗣️ กำลังพูดภาษาไทย...';
 
             // 1. พยายามใช้เสียงสังเคราะห์ภาษาไทย VAJA9 จาก AI FOR THAI ก่อน
             const vajaAudioUrl = await callAiForThaiVaja9Tts(strictThaiSpeech);
@@ -1862,7 +2026,7 @@
                     try {
                         const audio = new Audio(vajaAudioUrl);
                         activeAftAudio = audio;
-                        if (statusBadge) statusBadge.innerText = '🗣️ เสียงไทย วาจา 9 กำลังพูด...';
+                        if (statusBadge) statusBadge.innerText = '🗣️ เสียงวาจา 9 กำลังพูด...';
 
                         const done = () => {
                             isCurrentlySpeaking = false;
@@ -1875,23 +2039,23 @@
                         audio.onended = done;
                         audio.onerror = () => {
                             activeAftAudio = null;
-                            speakWithBrowserThaiFallback(strictThaiSpeech, statusBadge).then(resolve);
+                            speakWithStrictThaiSystemVoice(strictThaiSpeech, statusBadge).then(resolve);
                         };
                         audio.play().catch(() => {
                             activeAftAudio = null;
-                            speakWithBrowserThaiFallback(strictThaiSpeech, statusBadge).then(resolve);
+                            speakWithStrictThaiSystemVoice(strictThaiSpeech, statusBadge).then(resolve);
                         });
                     } catch (e) {
-                        speakWithBrowserThaiFallback(strictThaiSpeech, statusBadge).then(resolve);
+                        speakWithStrictThaiSystemVoice(strictThaiSpeech, statusBadge).then(resolve);
                     }
                 });
             }
 
-            // 2. สำรองด้วยเสียงภาษาไทย (th-TH) ของอุปกรณ์ทันทีเมื่อเครือข่ายช้าหรือออฟไลน์
-            return speakWithBrowserThaiFallback(strictThaiSpeech, statusBadge);
+            // 2. ใช้เสียงภาษาไทย (th-TH) ที่ล็อกเฉพาะเสียงไทยแท้ของเครื่อง
+            return speakWithStrictThaiSystemVoice(strictThaiSpeech, statusBadge);
         }
 
-        function speakWithBrowserThaiFallback(strictThaiSpeech, statusBadge) {
+        function speakWithStrictThaiSystemVoice(strictThaiSpeech, statusBadge) {
             return new Promise((resolve) => {
                 if (!('speechSynthesis' in window)) {
                     isCurrentlySpeaking = false;
@@ -1902,10 +2066,13 @@
                     if (window.speechSynthesis.paused) window.speechSynthesis.resume();
                 } catch (e) {}
 
+                const thaiVoice = getStrictThaiSystemVoice();
                 const utterance = new SpeechSynthesisUtterance(strictThaiSpeech);
                 utterance.lang = 'th-TH';
-                if (cachedThaiVoice) utterance.voice = cachedThaiVoice;
-                utterance.rate = 1.05;
+                if (thaiVoice) {
+                    utterance.voice = thaiVoice;
+                }
+                utterance.rate = 1.0;
                 utterance.pitch = 1.0;
                 utterance.volume = 1.0;
 
@@ -1938,7 +2105,7 @@
         }
 
         // =====================================================================
-        // ระบบคำนวณระยะทางเป็นเมตร (Distance Estimation in Meters)
+        // ระบบคำนวณระยะทางเป็นเมตร (อ่านภาษาไทยชัดเจน ไม่ใช้จุดทศนิยมที่ทำให้อ่านเพี้ยน)
         // =====================================================================
         function estimateObjectDistanceMeters(bboxHeightPx, frameHeightPx, realObjectHeightM = 1.40) {
             if (!bboxHeightPx || bboxHeightPx <= 0 || !frameHeightPx) return 2.0;
@@ -1950,7 +2117,8 @@
 
         function formatMetersSpeech(meters) {
             if (meters <= 0.8) return 'ใกล้มาก ไม่ถึง 1 เมตร';
-            return `ห่างประมาณ ${meters.toFixed(1).replace('.0', '')} เมตร`;
+            const cleanStr = meters.toFixed(1).replace('.0', '');
+            return `ห่างประมาณ ${formatThaiNumberSpeech(cleanStr)} เมตร`;
         }
 
         // =====================================================================
@@ -2154,7 +2322,7 @@
 
         function formatDistanceTH(meters) {
             if (meters === null || meters === undefined || isNaN(meters)) return 'พร้อมนำทาง';
-            if (meters >= 1000) return `${(meters / 1000).toFixed(2)} กิโลเมตร`;
+            if (meters >= 1000) return `${formatThaiNumberSpeech((meters / 1000).toFixed(2))} กิโลเมตร`;
             return `${meters} เมตร`;
         }
 
@@ -2400,7 +2568,7 @@
                     openSosEmergencyModal();
                     return;
                 }
-                if (rawTranscript.includes('สอน') || rawTranscript.includes('เทรน') || rawTranscript.includes('ใบหน้า') || rawTranscript.includes('คนรู้จัก')) {
+                if (rawTranscript.includes('สอน') || rawTranscript.includes('เทรน') || rawTranscript.includes('ใบหน้า') || rawTranscript.includes('คนรู้จัก') || rawTranscript.includes('แก้ไข')) {
                     openAiMemoryModal();
                     return;
                 }
@@ -2435,7 +2603,7 @@
         }
 
         // =====================================================================
-        // 5. กล้องเตือนสิ่งกีดขวาง + นำทางพร้อมกัน + AI FOR THAI ภาษาไทยเท่านั้น
+        // 5. กล้องเตือนสิ่งกีดขวาง + นำทางพร้อมกัน + เสียงภาษาไทยแท้ 100%
         // =====================================================================
         function startNavigationWithObstacleGuard() {
             closeLocationModal();
@@ -2530,7 +2698,7 @@
                 syncNavigationBannerInScanner();
                 await speakThaiText(`เริ่มนำทางไป ${currentModalData.placeQuery} พร้อมตรวจจับสิ่งกีดขวางครับ`, true);
             } else {
-                document.getElementById('hazard-subtitle-mode').innerText = 'AI FOR THAI: อ่านป้ายไทย + แปลไทย 100% + เสียงวาจา 9';
+                document.getElementById('hazard-subtitle-mode').innerText = 'เสียงพูดภาษาไทยแท้ 100% + AI FOR THAI OCR + แปลไทย';
                 document.getElementById('scanner-active-nav-banner').classList.add('hidden');
                 await speakThaiText('เปิดกล้องเตือนสิ่งกีดขวางภาษาไทยแล้วครับ', true);
             }
@@ -2688,10 +2856,8 @@
                     badgesContainer.appendChild(signBadge);
                 }
 
-                // 1. ตรวจสอบความจำที่ผู้ใช้หรือระบบเคยเทรนไว้ก่อน
                 const customMatch = await predictFromCustomKnnMemory(video);
 
-                // 2. ตรวจจับด้วย COCO-SSD เพื่อหาทั้งคลาสความมั่นใจ >= 65% และ < 65%
                 let highConfPredictions = [];
                 let lowConfPredictions = [];
 
@@ -2706,7 +2872,6 @@
                     });
                 }
 
-                // 3. หากเป็นสิ่งกีดขวางที่ยังไม่ถูกเทรนหรือความมั่นใจ < 65% -> แปลเป็นภาษาไทย 100% ผ่าน AI FOR THAI (ห้ามแจ้งภาษาอังกฤษเด็ดขาด)
                 let autoLearnedItem = null;
                 if (!customMatch && highConfPredictions.length === 0) {
                     const topLow = lowConfPredictions.length > 0 ? lowConfPredictions[0] : null;
@@ -2750,7 +2915,7 @@
 
                     const badge = document.createElement('span');
                     badge.className = 'inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-sky-500/25 border border-skyAccent/55 text-xs text-skyAccent font-semibold';
-                    badge.innerText = `${badgeIcon} ${thaiName} (~${distM} ม. • ${confPct}%)`;
+                    badge.innerText = `${badgeIcon} ${thaiName} (ประมาณ ${distM} ม. • ${confPct}%)`;
                     badgesContainer.appendChild(badge);
                 }
 
@@ -2762,7 +2927,7 @@
 
                     const badge = document.createElement('span');
                     badge.className = 'inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-indigo-500/25 border border-skyAccent/60 text-xs text-skyAccent font-semibold';
-                    badge.innerText = `🌐 แปลไทยอัตโนมัติ: ${thaiResolvedName} (~${autoLearnedItem.distM} ม.)`;
+                    badge.innerText = `🌐 แปลไทยอัตโนมัติ: ${thaiResolvedName} (${autoLearnedItem.distM} ม.)`;
                     badgesContainer.appendChild(badge);
                 }
 
@@ -2958,7 +3123,7 @@
                             const province = addr.city || addr.province || addr.state || "";
                             regionText = sanitizeToStrictThaiOnly([district, province].filter(Boolean).join(" "), "ประเทศไทย");
                         } catch (e) {
-                            placeName = `พิกัด ${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+                            placeName = `พิกัดปัจจุบัน`;
                         }
                     }
                 }
@@ -3017,7 +3182,7 @@
                     });
                     setStatus(`ตรวจสอบสถานที่สำเร็จ (${pos.source})`);
                 } catch (error) {
-                    const fallbackName = `พิกัด ${lat.toFixed(4)}, ${lon.toFixed(4)}`;
+                    const fallbackName = `ตำแหน่งปัจจุบันของคุณ`;
                     openLocationModal({
                         announcement: `ขณะนี้คุณอยู่ที่บริเวณ ${fallbackName}`,
                         placeQuery: `${lat},${lon}`,
