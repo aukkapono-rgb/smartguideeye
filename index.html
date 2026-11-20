@@ -8,7 +8,7 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#0b0f17">
 
-    <title>Smart Guide Eye v8 - AI FOR THAI, เสียงภาษาไทยแท้ 100%, แก้ไข/ย้ายความจำ AI &amp; นำทาง</title>
+    <title>Smart Guide Eye v9 - เสียงภาษาไทยแท้ 100%, AI FOR THAI, แก้ไข/ย้ายความจำ AI &amp; นำทาง</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- TensorFlow.js, COCO-SSD, MobileNet & KNN Classifier -->
@@ -104,6 +104,9 @@
     <div class="luxury-wallpaper" aria-hidden="true"></div>
     <div class="luxury-overlay" aria-hidden="true"></div>
 
+    <!-- ตัวเล่นเสียงภาษาไทยหลัก (ปลดล็อกเสียงอัตโนมัติเมื่อแตะหน้าจอครั้งแรก) -->
+    <audio id="global-thai-audio-player" playsinline preload="none" class="hidden"></audio>
+
     <!-- Toast แจ้งเตือน -->
     <div id="toast" role="status" aria-live="polite" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[90] hidden items-center gap-2.5 bg-surfaceElevated border border-goldAccent/40 text-textPrimary px-5 py-3 rounded-full shadow-2xl text-sm whitespace-nowrap">
         <span class="w-2 h-2 rounded-full bg-goldAccent"></span>
@@ -123,8 +126,8 @@
                     </svg>
                 </div>
                 <div>
-                    <h1 class="text-lg sm:text-xl font-semibold text-textPrimary tracking-tight">Smart Guide Eye <span class="text-xs text-goldAccent font-normal">v8</span></h1>
-                    <p class="text-[11px] text-textSecondary mt-0.5">AI FOR THAI • เสียงไทยแท้ 100% • แก้ไขความจำ AI • นำทาง</p>
+                    <h1 class="text-lg sm:text-xl font-semibold text-textPrimary tracking-tight">Smart Guide Eye <span class="text-xs text-goldAccent font-normal">v9</span></h1>
+                    <p class="text-[11px] text-textSecondary mt-0.5">เสียงภาษาไทยแท้ 100% • AI FOR THAI • แก้ไขความจำ AI • นำทาง</p>
                 </div>
             </div>
 
@@ -140,7 +143,7 @@
         <section class="mt-4 space-y-2.5" aria-label="เมนูคำสั่งหลัก">
             
             <!-- ปุ่ม 0: SOS ขอความช่วยเหลือฉุกเฉิน -->
-            <button type="button" id="btn-open-sos" onclick="hapticSosAlert(); openSosEmergencyModal()" 
+            <button type="button" id="btn-open-sos" onclick="unlockThaiAudioEngine(); hapticSosAlert(); openSosEmergencyModal()" 
                 aria-label="ปุ่ม SOS ขอความช่วยเหลือฉุกเฉิน ส่งพิกัดและโทรฉุกเฉิน"
                 class="w-full min-h-[58px] px-5 py-2.5 rounded-2xl bg-gradient-to-r from-red-600/35 to-rose-600/25 hover:from-red-600/45 hover:to-rose-600/35 active:scale-[0.99] border-2 border-red-500/70 text-left flex items-center justify-between gap-3 transition-all cursor-pointer shadow-lg shadow-red-950/30">
                 <div class="flex items-center gap-3.5">
@@ -156,7 +159,7 @@
             </button>
 
             <!-- ปุ่ม 1: ส่องกล้องเตือนสิ่งกีดขวาง + บอกระยะเมตร + สืบค้นภาษาไทยเท่านั้น -->
-            <button type="button" id="btn-open-hazard-cam" onclick="hapticTap(); openHazardScannerModal(false)" 
+            <button type="button" id="btn-open-hazard-cam" onclick="unlockThaiAudioEngine(); hapticTap(); openHazardScannerModal(false)" 
                 aria-label="ส่องกล้องเตือนสิ่งกีดขวาง บอกระยะเมตร และอ่านป้ายภาษาไทย"
                 class="w-full min-h-[60px] px-5 py-2.5 rounded-2xl bg-gradient-to-r from-amber-400/20 to-goldAccent/15 hover:from-amber-400/30 hover:to-goldAccent/25 active:scale-[0.99] border border-goldAccent/45 text-left flex items-center gap-4 transition-all cursor-pointer shadow-lg shadow-black/20">
                 <div class="w-11 h-11 rounded-xl bg-goldAccent/20 border border-goldAccent/40 flex items-center justify-center text-goldAccent shrink-0" aria-hidden="true">
@@ -172,7 +175,7 @@
             </button>
 
             <!-- ปุ่ม 1.5: จัดการความจำ AI (แก้ไข/ลบชื่อได้ + ส่งออกย้ายขึ้น Cloud ได้) -->
-            <button type="button" id="btn-open-ai-memory" onclick="hapticTap(); openAiMemoryModal()" 
+            <button type="button" id="btn-open-ai-memory" onclick="unlockThaiAudioEngine(); hapticTap(); openAiMemoryModal()" 
                 aria-label="เทรน AI แก้ไขชื่อ ลบ หรือย้ายข้อมูลไปเก็บใน Cloud"
                 class="w-full min-h-[56px] px-5 py-2.5 rounded-2xl bg-gradient-to-r from-sky-500/20 to-teal-500/15 hover:from-sky-500/30 hover:to-teal-500/25 active:scale-[0.99] border border-skyAccent/45 text-left flex items-center justify-between gap-3 transition-all cursor-pointer">
                 <div class="flex items-center gap-3.5">
@@ -187,7 +190,7 @@
 
             <!-- ปุ่ม 2: บอกสถานที่ปัจจุบัน & พูดจุดหมายปลายทางนำทาง -->
             <div class="grid grid-cols-2 gap-2.5">
-                <button type="button" id="btn-check-gps" onclick="hapticTap(); detectRealLocation()" 
+                <button type="button" id="btn-check-gps" onclick="unlockThaiAudioEngine(); hapticTap(); detectRealLocation()" 
                     aria-label="บอกสถานที่ปัจจุบันและเปิดระบบนำทาง"
                     class="min-h-[58px] px-4 py-2.5 rounded-2xl bg-textPrimary hover:bg-white active:scale-[0.99] disabled:bg-surfaceElevated disabled:text-textSecondary text-obsidian text-left flex items-center gap-2.5 transition-all cursor-pointer disabled:cursor-not-allowed shadow-lg shadow-white/5">
                     <span class="text-lg shrink-0" aria-hidden="true">📍</span>
@@ -197,7 +200,7 @@
                     </div>
                 </button>
 
-                <button type="button" id="btn-speak-destination" onclick="hapticTap(); startDestinationVoiceInput()" 
+                <button type="button" id="btn-speak-destination" onclick="unlockThaiAudioEngine(); hapticTap(); startDestinationVoiceInput()" 
                     aria-label="พูดจุดหมายปลายทางด้วยเสียงเพื่อเริ่มนำทางและตรวจจับสิ่งกีดขวาง"
                     class="min-h-[58px] px-4 py-2.5 rounded-2xl bg-tealAccent/20 hover:bg-tealAccent/30 active:scale-[0.99] border border-tealAccent/50 text-tealAccent text-left flex items-center gap-2.5 transition-all cursor-pointer">
                     <span class="text-lg shrink-0" aria-hidden="true">🧭</span>
@@ -211,7 +214,7 @@
             <!-- ปุ่ม 3: ถ่ายภาพสถานที่ & สั่งงานด้วยเสียง -->
             <div class="grid grid-cols-2 gap-2.5">
                 <input type="file" id="camera-photo-input" accept="image/*" capture="environment" class="hidden" onchange="handlePlacePhotoCapture(event)">
-                <button type="button" id="btn-capture-photo" onclick="hapticTap(); triggerCameraCapture()" 
+                <button type="button" id="btn-capture-photo" onclick="unlockThaiAudioEngine(); hapticTap(); triggerCameraCapture()" 
                     aria-label="ถ่ายภาพสถานที่พร้อมระบุตำแหน่ง"
                     class="min-h-[54px] px-3.5 py-2 rounded-2xl bg-surfaceElevated/90 hover:bg-surfaceElevated active:scale-[0.99] border border-tealAccent/35 text-left flex items-center gap-2.5 transition-all cursor-pointer">
                     <span class="text-lg shrink-0" aria-hidden="true">📸</span>
@@ -221,7 +224,7 @@
                     </div>
                 </button>
 
-                <button type="button" id="btn-voice-cmd" onclick="hapticTap(); startThaiVoiceCommand()" 
+                <button type="button" id="btn-voice-cmd" onclick="unlockThaiAudioEngine(); hapticTap(); startThaiVoiceCommand()" 
                     aria-label="สั่งงานด้วยเสียงพูดภาษาไทย"
                     class="min-h-[54px] px-3.5 py-2 rounded-2xl bg-surfaceElevated/90 hover:bg-surfaceElevated active:scale-[0.99] border border-rose-400/35 text-left flex items-center gap-2.5 transition-all cursor-pointer">
                     <span class="text-lg shrink-0" aria-hidden="true">🎙️</span>
@@ -242,7 +245,7 @@
                     <h2 class="text-sm font-semibold text-goldAccent">สถานีรถไฟฟ้า BTS &amp; MRT ทุกสาย (<span id="transit-total-count">0</span> สถานี)</h2>
                     <p class="text-[11px] text-textSecondary">สุขุมวิท • สีลม • สีทอง • น้ำเงิน • ม่วง • เหลือง • ชมพู</p>
                 </div>
-                <button type="button" id="btn-nearest-transit" onclick="hapticTap(); findNearestTransitStation()" 
+                <button type="button" id="btn-nearest-transit" onclick="unlockThaiAudioEngine(); hapticTap(); findNearestTransitStation()" 
                     aria-label="ค้นหาสถานีรถไฟฟ้าที่ใกล้ที่สุด"
                     class="min-h-[36px] px-3 py-1 rounded-xl bg-tealAccent/15 hover:bg-tealAccent/25 border border-tealAccent/40 text-tealAccent text-xs font-semibold flex items-center gap-1.5 cursor-pointer shrink-0 transition-all">
                     <span>📍 ใกล้ฉันที่สุด</span>
@@ -295,7 +298,7 @@
         <section class="mt-3 bg-obsidian/75 border border-borderLuxury rounded-2xl p-3" aria-live="polite">
             <div class="flex items-center gap-2.5 text-xs text-textSecondary">
                 <span class="w-2 h-2 rounded-full bg-goldAccent shrink-0" aria-hidden="true"></span>
-                <span id="status" class="leading-relaxed">พร้อมใช้งาน v8: เสียงพูดภาษาไทยแท้ 100% + AI FOR THAI + แก้ไข/ลบ/ย้ายความจำ AI ลง Cloud</span>
+                <span id="status" class="leading-relaxed">พร้อมใช้งาน v9: เสียงภาษาไทยแท้ 100% + AI FOR THAI + แก้ไข/ลบ/ย้ายความจำ AI ลง Cloud</span>
             </div>
         </section>
 
@@ -768,6 +771,7 @@
         let isLiveNavRunning = false;
         let isScannerPausedByUser = false;
         let currentSosFullMessage = "";
+        let isAudioEngineUnlocked = false;
 
         // เกณฑ์ความมั่นใจขั้นต่ำของ AI
         const AI_MIN_CONFIDENCE = 0.65;
@@ -777,8 +781,8 @@
         const OCR_INTERVAL_MS = 3800;
         const NEW_HAZARD_COOLDOWN_MS = 1200;
         const SAME_HAZARD_REPEAT_MS = 6500;
-        const KNN_STORAGE_KEY = 'smart_guide_eye_knn_memory_v8';
-        const LEGACY_STORAGE_KEYS = ['smart_guide_eye_knn_memory_v7'];
+        const KNN_STORAGE_KEY = 'smart_guide_eye_knn_memory_v9';
+        const LEGACY_STORAGE_KEYS = ['smart_guide_eye_knn_memory_v8', 'smart_guide_eye_knn_memory_v7'];
         const BACKGROUND_CLASS_KEY = 'BACKGROUND::NORMAL_PATH';
 
         // ฐานข้อมูลสถานีรถไฟฟ้า BTS และ MRT ครบทุกสายหลักและส่วนต่อขยาย
@@ -1072,7 +1076,6 @@
         let latestDetectedSignText = "";
         let latestDetectedSignExpires = 0;
         let cachedThaiVoice = null;
-        let activeAftAudio = null;
 
         window.addEventListener('DOMContentLoaded', () => {
             renderTransitStationsList();
@@ -1080,6 +1083,21 @@
             silentWarmupGps();
             loadThaiVoicePreference();
         });
+
+        // ปลดล็อก Audio Element บนมือถือเมื่อผู้ใช้แตะหน้าจอครั้งแรก
+        function unlockThaiAudioEngine() {
+            if (isAudioEngineUnlocked) return;
+            try {
+                const audioEl = document.getElementById('global-thai-audio-player');
+                if (audioEl) {
+                    audioEl.src = 'data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA';
+                    audioEl.play().then(() => {
+                        audioEl.pause();
+                        isAudioEngineUnlocked = true;
+                    }).catch(() => {});
+                }
+            } catch (e) {}
+        }
 
         // =====================================================================
         // ค้นหาและล็อกเสียงสังเคราะห์ภาษาไทย (th-TH) ของอุปกรณ์อย่างเข้มงวด
@@ -1090,7 +1108,6 @@
                 const voices = window.speechSynthesis.getVoices() || [];
                 if (voices.length === 0) return cachedThaiVoice;
 
-                // ลำดับความสำคัญ: 1. th-TH ตรงตัว 2. ขึ้นต้นด้วย th 3. ชื่อเสียงมีคำว่า Thai / ไทย / Premwadee / Pattara / Kanya / Narisa
                 const exactTh = voices.find(v => v.lang && v.lang.toLowerCase() === 'th-th');
                 if (exactTh) return exactTh;
 
@@ -1131,7 +1148,6 @@
             if (!rawText) return fallbackThai;
             let text = String(rawText);
 
-            // แปลงคำย่อที่จำเป็นให้เป็นคำอ่านภาษาไทย
             text = text
                 .replace(/\bBTS\b/gi, 'บีทีเอส')
                 .replace(/\bMRT\b/gi, 'เอ็มอาร์ที')
@@ -1144,10 +1160,8 @@
                 .replace(/\bWi-Fi\b/gi, 'ไวไฟ')
                 .replace(/\bMBK\b/gi, 'เอ็มบีเค');
 
-            // แปลงจุดทศนิยมเป็นคำว่า "จุด"
             text = formatThaiNumberSpeech(text);
 
-            // ลบอักขระภาษาอังกฤษ A-Z และสัญลักษณ์พิเศษออกทั้งหมด เหลือเฉพาะภาษาไทย ตัวเลข และช่องว่าง
             text = text
                 .replace(/[a-zA-Z]+/g, ' ')
                 .replace(/[^\u0E00-\u0E7F0-9\s]/g, ' ')
@@ -1329,13 +1343,12 @@
             persistKnnMemoryToStorage();
         }
 
-        // ฟังก์ชันแก้ไขชื่อรายการที่เทรนผิด (ย้ายเวกเตอร์ Tensor ไปชื่อใหม่ทันทีโดยไม่ต้องเทรนซ้ำ)
         function editTrainedMemoryItem(index) {
             const item = trainedMemoryMeta[index];
             if (!item) return;
 
             const newRawName = window.prompt(`แก้ไขชื่อภาษาไทยสำหรับ "${item.displayName}":`, item.displayName);
-            if (newRawName === null) return; // กดยกเลิก
+            if (newRawName === null) return;
 
             const cleanNewThaiName = sanitizeToStrictThaiOnly(newRawName, '');
             if (!cleanNewThaiName) {
@@ -1367,7 +1380,6 @@
                 console.warn('Rename tensor warning:', e);
             }
 
-            // อัปเดตข้อมูล Meta
             const duplicateIdx = trainedMemoryMeta.findIndex((m, i) => i !== index && m.labelKey === newLabelKey);
             if (duplicateIdx !== -1) {
                 trainedMemoryMeta[duplicateIdx].sampleCount += (item.sampleCount || 2);
@@ -1384,7 +1396,6 @@
             speakThaiText(`แก้ไขชื่อเป็น ${cleanNewThaiName} เรียบร้อยแล้วครับ`, true);
         }
 
-        // ฟังก์ชันส่งออกไฟล์ความจำ AI (.json) เพื่อย้ายไปเก็บใน Cloud ของผู้ใช้เอง
         function exportTrainedMemoryToCloudFile() {
             if (trainedMemoryMeta.length === 0) {
                 showToast('ยังไม่มีข้อมูลที่เทรนไว้สำหรับส่งออก');
@@ -1400,7 +1411,7 @@
             const a = document.createElement('a');
             const dateTag = new Date().toISOString().slice(0, 10);
             a.href = url;
-            a.download = `smart_guide_eye_memory_${dateTag}.json`;
+            a.download = `smart_guide_eye_memory_v9_${dateTag}.json`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
@@ -1410,7 +1421,6 @@
             speakThaiText('ส่งออกไฟล์ความจำเอไอเรียบร้อยแล้ว สามารถนำไปเก็บไว้ในคลาวด์ของคุณได้เลยครับ', true);
         }
 
-        // ฟังก์ชันนำเข้าไฟล์ความจำ AI (.json) จาก Cloud ของผู้ใช้
         function importTrainedMemoryFromCloudFile(event) {
             const file = event.target.files && event.target.files[0];
             if (!file) return;
@@ -1921,14 +1931,16 @@
         }
 
         // =====================================================================
-        // (ค) ระบบสังเคราะห์เสียงภาษาไทยแท้ 100% (AI FOR THAI VAJA9 + ระบบเสียงไทยในเครื่อง)
-        //     แก้ปัญหาเสียงต่างชาติอ่านภาษาไทยไม่ออกอย่างเด็ดขาด
+        // (ค) ระบบสังเคราะห์เสียงภาษาไทยแท้ 100% (แก้ปัญหาเสียงต่างชาติอ่านไม่ออก)
+        //     1. AI FOR THAI VAJA9 (เล่นตรงผ่าน Audio Element เพื่อเลี่ยง CORS)
+        //     2. ระบบเสียง th-TH ของมือถือ (หากติดตั้งไว้)
+        //     3. Thai Neural TTS Audio Stream (เสียงผู้หญิงไทยชัดเจน 100% ทุกเครื่อง)
         // =====================================================================
-        async function callAiForThaiVaja9Tts(thaiText) {
+        async function getAiForThaiVaja9AudioUrl(thaiText) {
             if (!navigator.onLine || !thaiText) return null;
 
             const controller = new AbortController();
-            const timerId = setTimeout(() => controller.abort(), 2200);
+            const timerId = setTimeout(() => controller.abort(), 2000);
 
             try {
                 const response = await fetch(AFT_ENDPOINTS.VAJA9_TTS, {
@@ -1949,15 +1961,7 @@
                 if (!response.ok) return null;
 
                 const data = await response.json();
-                const wavUrl = data.wav_url || data.audio_url || data.url;
-                if (!wavUrl) return null;
-
-                const audioRes = await fetch(wavUrl, {
-                    headers: { 'Apikey': AI_FOR_THAI_API_KEY }
-                });
-                if (!audioRes.ok) return wavUrl;
-                const audioBlob = await audioRes.blob();
-                return URL.createObjectURL(audioBlob);
+                return data.wav_url || data.audio_url || data.url || null;
             } catch (e) {
                 clearTimeout(timerId);
                 return null;
@@ -1965,6 +1969,7 @@
         }
 
         function toggleVoiceAutoSpeak() {
+            unlockThaiAudioEngine();
             hapticTap();
             isAutoSpeakEnabled = !isAutoSpeakEnabled;
             const icon = document.getElementById('tts-icon');
@@ -1985,12 +1990,13 @@
         }
 
         function stopAllSpeech() {
-            if (activeAftAudio) {
+            const audioEl = document.getElementById('global-thai-audio-player');
+            if (audioEl) {
                 try {
-                    activeAftAudio.pause();
-                    activeAftAudio.src = '';
+                    audioEl.pause();
+                    audioEl.removeAttribute('src');
+                    audioEl.load();
                 } catch (e) {}
-                activeAftAudio = null;
             }
             if ('speechSynthesis' in window) {
                 try { window.speechSynthesis.cancel(); } catch (e) {}
@@ -2000,6 +2006,37 @@
             if (badge) badge.innerText = '🔊 เสียงไทยพร้อมพูด';
         }
 
+        function playAudioUrlWithTimeout(url, timeoutMs = 4500) {
+            return new Promise((resolve) => {
+                const audioEl = document.getElementById('global-thai-audio-player');
+                if (!audioEl || !url) return resolve(false);
+
+                let settled = false;
+                const finish = (success) => {
+                    if (settled) return;
+                    settled = true;
+                    clearTimeout(safetyTimer);
+                    audioEl.onended = null;
+                    audioEl.onerror = null;
+                    resolve(success);
+                };
+
+                const safetyTimer = setTimeout(() => finish(false), timeoutMs);
+                audioEl.onended = () => finish(true);
+                audioEl.onerror = () => finish(false);
+
+                try {
+                    audioEl.src = url;
+                    const playPromise = audioEl.play();
+                    if (playPromise && typeof playPromise.catch === 'function') {
+                        playPromise.catch(() => finish(false));
+                    }
+                } catch (e) {
+                    finish(false);
+                }
+            });
+        }
+
         async function speakThaiText(rawText, interruptCurrent = false) {
             if (!rawText) return;
             if (!isAutoSpeakEnabled && !interruptCurrent) return;
@@ -2007,7 +2044,7 @@
             // บังคับกรองข้อความให้เป็นภาษาไทยแท้ 100% เท่านั้นก่อนส่งออกเสียงทุกครั้ง
             const strictThaiSpeech = sanitizeToStrictThaiOnly(rawText, 'ระวังสิ่งกีดขวางตรงหน้าครับ');
 
-            if (isCurrentlySpeaking && (Date.now() - speechStartedAt > 4200)) {
+            if (isCurrentlySpeaking && (Date.now() - speechStartedAt > 4500)) {
                 stopAllSpeech();
             }
 
@@ -2019,87 +2056,70 @@
             speechStartedAt = Date.now();
             if (statusBadge) statusBadge.innerText = '🗣️ กำลังพูดภาษาไทย...';
 
-            // 1. พยายามใช้เสียงสังเคราะห์ภาษาไทย VAJA9 จาก AI FOR THAI ก่อน
-            const vajaAudioUrl = await callAiForThaiVaja9Tts(strictThaiSpeech);
-            if (vajaAudioUrl) {
-                return new Promise((resolve) => {
-                    try {
-                        const audio = new Audio(vajaAudioUrl);
-                        activeAftAudio = audio;
-                        if (statusBadge) statusBadge.innerText = '🗣️ เสียงวาจา 9 กำลังพูด...';
+            try {
+                // 1. ลองใช้เสียงภาษาไทย VAJA9 จาก AI FOR THAI (ผ่าน Audio element โดยตรงเพื่อไม่ติด CORS)
+                const vajaUrl = await getAiForThaiVaja9AudioUrl(strictThaiSpeech);
+                if (vajaUrl) {
+                    if (statusBadge) statusBadge.innerText = '🗣️ เสียงไทย วาจา 9...';
+                    const okVaja = await playAudioUrlWithTimeout(vajaUrl, 4500);
+                    if (okVaja) return;
+                }
 
-                        const done = () => {
-                            isCurrentlySpeaking = false;
-                            lastSpeechFinishedAt = Date.now();
-                            activeAftAudio = null;
-                            if (statusBadge) statusBadge.innerText = '🔊 เสียงไทยพร้อมพูด';
-                            resolve();
-                        };
+                // 2. ตรวจสอบว่าเครื่องมีเสียงพูดภาษาไทยแท้ (th-TH) ติดตั้งไว้หรือไม่
+                const nativeThaiVoice = getStrictThaiSystemVoice();
+                if (nativeThaiVoice && 'speechSynthesis' in window) {
+                    if (statusBadge) statusBadge.innerText = '🗣️ เสียงภาษาไทยในเครื่อง...';
+                    const okNative = await speakWithStrictThaiSystemVoice(strictThaiSpeech, nativeThaiVoice);
+                    if (okNative) return;
+                }
 
-                        audio.onended = done;
-                        audio.onerror = () => {
-                            activeAftAudio = null;
-                            speakWithStrictThaiSystemVoice(strictThaiSpeech, statusBadge).then(resolve);
-                        };
-                        audio.play().catch(() => {
-                            activeAftAudio = null;
-                            speakWithStrictThaiSystemVoice(strictThaiSpeech, statusBadge).then(resolve);
-                        });
-                    } catch (e) {
-                        speakWithStrictThaiSystemVoice(strictThaiSpeech, statusBadge).then(resolve);
-                    }
-                });
+                // 3. หากเครื่องไม่มีแพ็กเกจเสียงไทย (หรือเป็นเสียงต่างชาติ) ให้ใช้ Thai Neural TTS Stream เพื่อออกเสียงภาษาไทยชัดเจน 100%
+                if (navigator.onLine) {
+                    if (statusBadge) statusBadge.innerText = '🗣️ เสียงไทยชัดเจน 100%...';
+                    const thaiStreamUrl = `https://translate.googleapis.com/translate_tts?ie=UTF-8&tl=th&client=tw-ob&q=${encodeURIComponent(strictThaiSpeech.slice(0, 180))}`;
+                    const okStream = await playAudioUrlWithTimeout(thaiStreamUrl, 4500);
+                    if (okStream) return;
+                }
+            } finally {
+                isCurrentlySpeaking = false;
+                lastSpeechFinishedAt = Date.now();
+                if (statusBadge) statusBadge.innerText = '🔊 เสียงไทยพร้อมพูด';
             }
-
-            // 2. ใช้เสียงภาษาไทย (th-TH) ที่ล็อกเฉพาะเสียงไทยแท้ของเครื่อง
-            return speakWithStrictThaiSystemVoice(strictThaiSpeech, statusBadge);
         }
 
-        function speakWithStrictThaiSystemVoice(strictThaiSpeech, statusBadge) {
+        function speakWithStrictThaiSystemVoice(strictThaiSpeech, thaiVoice) {
             return new Promise((resolve) => {
-                if (!('speechSynthesis' in window)) {
-                    isCurrentlySpeaking = false;
-                    return resolve();
+                if (!('speechSynthesis' in window) || !thaiVoice) {
+                    return resolve(false);
                 }
 
                 try {
                     if (window.speechSynthesis.paused) window.speechSynthesis.resume();
                 } catch (e) {}
 
-                const thaiVoice = getStrictThaiSystemVoice();
                 const utterance = new SpeechSynthesisUtterance(strictThaiSpeech);
                 utterance.lang = 'th-TH';
-                if (thaiVoice) {
-                    utterance.voice = thaiVoice;
-                }
+                utterance.voice = thaiVoice;
                 utterance.rate = 1.0;
                 utterance.pitch = 1.0;
                 utterance.volume = 1.0;
 
                 let settled = false;
-                const finishSpeech = () => {
+                const finishSpeech = (success) => {
                     if (settled) return;
                     settled = true;
-                    isCurrentlySpeaking = false;
-                    lastSpeechFinishedAt = Date.now();
-                    if (statusBadge) statusBadge.innerText = '🔊 เสียงไทยพร้อมพูด';
-                    resolve();
+                    clearTimeout(safetyTimer);
+                    resolve(success);
                 };
 
-                const safetyTimer = setTimeout(finishSpeech, 4200);
-                utterance.onstart = () => {
-                    isCurrentlySpeaking = true;
-                    speechStartedAt = Date.now();
-                    if (statusBadge) statusBadge.innerText = '🗣️ เสียงภาษาไทยกำลังพูด...';
-                };
-                utterance.onend = () => { clearTimeout(safetyTimer); finishSpeech(); };
-                utterance.onerror = () => { clearTimeout(safetyTimer); finishSpeech(); };
+                const safetyTimer = setTimeout(() => finishSpeech(true), 4200);
+                utterance.onend = () => finishSpeech(true);
+                utterance.onerror = () => finishSpeech(false);
 
                 try {
                     window.speechSynthesis.speak(utterance);
                 } catch (e) {
-                    clearTimeout(safetyTimer);
-                    finishSpeech();
+                    finishSpeech(false);
                 }
             });
         }
@@ -2364,6 +2384,7 @@
                 btn.setAttribute('aria-label', `เลือกสถานี ${station.name} ${station.exit}`);
                 btn.className = 'w-full min-h-[50px] px-3.5 py-2 rounded-2xl bg-obsidian/80 hover:bg-surfaceElevated active:scale-[0.99] border border-borderLuxury flex items-center justify-between gap-2.5 text-left cursor-pointer transition-all';
                 btn.onclick = () => {
+                    unlockThaiAudioEngine();
                     hapticTap();
                     selectTransitStation(station);
                 };
