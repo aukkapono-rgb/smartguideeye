@@ -8,7 +8,7 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#0b0f17">
 
-    <title>Smart Guide Eye v12 - AI FOR THAI, ตรวจจับทรงวัตถุ, อ่านป้าย/เบอร์โทร &amp; นำทาง</title>
+    <title>Smart Guide Eye v13 - AI FOR THAI, ตรวจจับทรงวัตถุ, อ่านป้าย/เบอร์โทร &amp; นำทาง</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- TensorFlow.js, COCO-SSD, MobileNet & KNN Classifier -->
@@ -126,7 +126,7 @@
                     </svg>
                 </div>
                 <div>
-                    <h1 class="text-lg sm:text-xl font-semibold text-textPrimary tracking-tight">Smart Guide Eye <span class="text-xs text-goldAccent font-normal">v12</span></h1>
+                    <h1 class="text-lg sm:text-xl font-semibold text-textPrimary tracking-tight">Smart Guide Eye <span class="text-xs text-goldAccent font-normal">v13</span></h1>
                     <p class="text-[11px] text-textSecondary mt-0.5">AI FOR THAI • แยกรูปทรงวัตถุ • อ่านป้าย/เบอร์โทร • ปิดโหมดพักจอชั่วคราว</p>
                 </div>
             </div>
@@ -300,7 +300,7 @@
         <section class="mt-3 bg-obsidian/75 border border-borderLuxury rounded-2xl p-3" aria-live="polite">
             <div class="flex items-center gap-2.5 text-xs text-textSecondary">
                 <span class="w-2 h-2 rounded-full bg-goldAccent shrink-0" aria-hidden="true"></span>
-                <span id="status" class="leading-relaxed">พร้อมใช้งาน v12: แสดงผลหน้าจอตลอดเวลา (ปิดระบบพักหน้าจอ 5 วินาทีแล้ว)</span>
+                <span id="status" class="leading-relaxed">พร้อมใช้งาน v13: AI FOR THAI + ตรวจจับมุมกล้อง/หลุมบ่อ + โทรด่วน SOS + อ่านฉลากสินค้า/เบอร์โทร</span>
             </div>
         </section>
 
@@ -323,9 +323,9 @@
                 </button>
             </div>
 
-            <!-- ปุ่มโทรด่วนคนในครอบครัวที่บันทึกเบอร์โทรไว้ -->
-            <div id="sos-family-contacts-box" class="hidden mt-3.5 bg-sky-950/45 border border-skyAccent/45 rounded-2xl p-3.5">
-                <span class="text-xs font-bold text-skyAccent block mb-2">📞 โทรด่วนคนในครอบครัว / ผู้ดูแลที่บันทึกไว้:</span>
+            <!-- ปุ่มโทรด่วนคนในครอบครัวที่บันทึกเบอร์โทรไว้ + ส่ง SMS พิกัดปุ่มเดียว (ข้อ 18) -->
+            <div id="sos-family-contacts-box" class="hidden mt-3.5 bg-sky-950/55 border-2 border-skyAccent/60 rounded-2xl p-3.5 space-y-2">
+                <span class="text-xs font-bold text-skyAccent block">📞 โทรด่วนญาติอันดับ 1 &amp; ส่ง SMS พิกัดทันที:</span>
                 <div id="sos-family-buttons" class="grid grid-cols-1 gap-2"></div>
             </div>
 
@@ -410,8 +410,8 @@
                 </div>
             </div>
 
-            <!-- ปุ่มควบคุมกล้อง: หยุดชั่วคราว / ไฟฉาย / สอน AI -->
-            <div class="mt-3 grid grid-cols-3 gap-2">
+            <!-- ปุ่มควบคุมกล้อง: หยุดชั่วคราว / ไฟฉาย / สอน AI / อ่านฉลากสินค้า -->
+            <div class="mt-3 grid grid-cols-4 gap-1.5">
                 <button type="button" id="btn-toggle-pause-scan" onclick="Haptic.tap(); VisionSystem.togglePause()" 
                     aria-label="หยุดชั่วคราวหรือใช้งานต่อการตรวจจับ"
                     class="min-h-[44px] px-2 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/50 text-amber-200 font-semibold text-xs flex items-center justify-center gap-1 cursor-pointer transition-all">
@@ -426,9 +426,15 @@
                     <span id="torch-btn-label">ไฟฉาย</span>
                 </button>
 
+                <button type="button" id="btn-product-label-mode" onclick="Haptic.tap(); VisionSystem.toggleProductLabelMode()" 
+                    aria-label="โหมดอ่านฉลากสินค้า ฉลากยา และเอกสาร"
+                    class="min-h-[44px] px-1.5 py-2 rounded-xl bg-teal-500/20 hover:bg-teal-500/30 border border-tealAccent/50 text-tealAccent font-semibold text-[11px] flex items-center justify-center gap-1 cursor-pointer transition-all">
+                    <span>🏷️ ฉลากยา</span>
+                </button>
+
                 <button type="button" onclick="Haptic.tap(); MemorySystem.openQuickTeachDrawer()" 
                     aria-label="สอน AI ว่าสิ่งนี้คืออะไร"
-                    class="min-h-[44px] px-2 py-2 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 border border-skyAccent/50 text-skyAccent font-semibold text-xs flex items-center justify-center gap-1 cursor-pointer transition-all">
+                    class="min-h-[44px] px-1.5 py-2 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 border border-skyAccent/50 text-skyAccent font-semibold text-[11px] flex items-center justify-center gap-1 cursor-pointer transition-all">
                     <span>🎓 สอน AI</span>
                 </button>
             </div>
@@ -835,8 +841,8 @@
             COLLISION_REPEAT_MS: 2200,        // เตือนซ้ำทันทีเมื่อเข้าใกล้ระยะอันตราย (< 1.2 ม.)
             ENABLE_SCREEN_IDLE_DIM: false,    // ปิดระบบพักหน้าจอประหยัดพลังงาน 5 วินาทีไว้ชั่วคราวใน v12
             SCREEN_IDLE_DIM_MS: 5000,         // (สำรอง) พักหน้าจออัตโนมัติหลังกดใช้งาน 5 วินาที
-            KNN_STORAGE_KEY: 'smart_guide_eye_knn_memory_v12',
-            LEGACY_STORAGE_KEYS: ['smart_guide_eye_knn_memory_v11', 'smart_guide_eye_knn_memory_v10', 'smart_guide_eye_knn_memory_v9'],
+            KNN_STORAGE_KEY: 'smart_guide_eye_knn_memory_v13',
+            LEGACY_STORAGE_KEYS: ['smart_guide_eye_knn_memory_v12', 'smart_guide_eye_knn_memory_v11', 'smart_guide_eye_knn_memory_v10', 'smart_guide_eye_knn_memory_v9'],
             BACKGROUND_CLASS_KEY: 'BACKGROUND::NORMAL_PATH'
         };
 
@@ -923,6 +929,8 @@
             lastTapTime: 0,
             overlayEl: null,
             wakeLockSentinel: null,
+            lastTiltWarnAt: 0,
+            currentBetaDeg: 75,
 
             init() {
                 // สร้างแผ่นสีดำสนิทประหยัดแบตเตอรี่จอ OLED 100% โดยที่กล้องและเสียงทำงานต่อเบื้องหลัง
@@ -1014,6 +1022,37 @@
                 if (navigator.vibrate) navigator.vibrate([35, 45, 35]);
                 AudioEngine.speak('เปิดหน้าจอแล้วครับ', true);
                 this.resetIdleTimer();
+            },
+
+            // ระบบตรวจจับองศามือถือ (DeviceOrientationEvent) ป้องกันจุดบอดระดับศีรษะและหลุมบ่อบนพื้น (ข้อ 18)
+            startTiltMonitor() {
+                if (typeof window === 'undefined' || !('DeviceOrientationEvent' in window)) return;
+                if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+                    DeviceOrientationEvent.requestPermission().catch(() => {});
+                }
+                window.addEventListener('deviceorientation', (e) => {
+                    if (e.beta === null || e.beta === undefined) return;
+                    this.currentBetaDeg = e.beta;
+                    const scannerModal = document.getElementById('hazard-scanner-modal');
+                    const isScannerOpen = scannerModal && !scannerModal.classList.contains('hidden') && !VisionSystem.isPaused;
+                    if (!isScannerOpen) return;
+
+                    const now = Date.now();
+                    if (now - this.lastTiltWarnAt < 8500 || AudioEngine.isSpeaking) return;
+
+                    // beta > 125 องศา = เงยกล้องขึ้นฟ้ามากเกินไป (มองไม่เห็นหลุมบ่อ/ท่อระบายน้ำบนพื้น)
+                    if (e.beta > 125) {
+                        this.lastTiltWarnAt = now;
+                        Haptic.warn();
+                        AudioEngine.speak('มุมกล้องเงยสูงเกินไป อาจมองไม่เห็นหลุมหรือท่อระบายน้ำบนพื้น กรุณากดหน้ากล้องลงเล็กน้อยครับ', false);
+                    }
+                    // beta < 32 องศา = ก้มกล้องลงพื้นมากเกินไป (มองไม่เห็นกิ่งไม้หรือสิ่งกีดขวางระดับศีรษะ)
+                    else if (e.beta < 32 && e.beta > -20) {
+                        this.lastTiltWarnAt = now;
+                        Haptic.warn();
+                        AudioEngine.speak('มุมกล้องก้มต่ำเกินไป อาจมองไม่เห็นกิ่งไม้หรือป้ายระดับศีรษะ กรุณายกกล้องตั้งตรงระดับอกครับ', false);
+                    }
+                }, { passive: true });
             }
         };
 
@@ -1261,6 +1300,30 @@
                         finish(false);
                     }
                 });
+            },
+
+            // ระบบเสียงฉุกเฉิน Offline-First สำหรับระยะประชิด (< 1.5 เมตร) ไม่รออินเทอร์เน็ต ลดความหน่วง 0 วินาที (ข้อ 18)
+            async speakOfflinePriority(rawText, interruptCurrent = true) {
+                if (!rawText || this.isMicActive) return;
+                if (!this.isAutoSpeakEnabled && !interruptCurrent) return;
+                const speechText = UI.sanitizeReadableText(rawText, 'ระวังสิ่งกีดขวางระยะประชิดครับ', true);
+                if (interruptCurrent) this.stopAll();
+
+                this.isSpeaking = true;
+                this.speechStartedAt = Date.now();
+                const statusBadge = document.getElementById('speech-engine-status');
+                if (statusBadge) statusBadge.innerText = '⚡ เตือนด่วนระยะประชิด (Offline)...';
+                try {
+                    if (this.cachedThaiVoice) {
+                        await this.speakNativeSystem(speechText, this.cachedThaiVoice);
+                        return;
+                    }
+                    await this.speak(speechText, interruptCurrent);
+                } finally {
+                    this.isSpeaking = false;
+                    this.lastFinishedAt = Date.now();
+                    if (statusBadge) statusBadge.innerText = '🔊 เสียงไทยพร้อมพูด';
+                }
             },
 
             async speak(rawText, interruptCurrent = false) {
@@ -1983,7 +2046,7 @@
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = `smart_guide_eye_secure_v12_${new Date().toISOString().slice(0, 10)}.json`;
+                a.download = `smart_guide_eye_secure_v13_${new Date().toISOString().slice(0, 10)}.json`;
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
@@ -2072,6 +2135,7 @@
             isOcrRunning: false,
             isPaused: false,
             isTorchOn: false,
+            isProductLabelMode: false,
             lastAlertText: "",
             lastAlertTime: 0,
             lastClearAnnouncedAt: 0,
@@ -2322,6 +2386,7 @@
                 } else {
                     document.getElementById('hazard-subtitle-mode').innerText = 'ตีกรอบตามพิกัดจริง • แยกรูปทรงบนโต๊ะ • อ่านเบอร์โทร/สินค้า';
                     document.getElementById('scanner-active-nav-banner').classList.add('hidden');
+                    SafetyAndPowerSystem.startTiltMonitor();
                     await AudioEngine.speak('เปิดกล้องตรวจจับสิ่งกีดขวางและอ่านป้ายแล้วครับ', true);
                 }
 
@@ -2394,6 +2459,22 @@
                 this.isTorchOn = false;
             },
 
+            toggleProductLabelMode() {
+                this.isProductLabelMode = !this.isProductLabelMode;
+                const btn = document.getElementById('btn-product-label-mode');
+                const sub = document.getElementById('hazard-subtitle-mode');
+                if (this.isProductLabelMode) {
+                    if (btn) btn.className = 'min-h-[44px] px-1.5 py-2 rounded-xl bg-tealAccent text-obsidian font-bold text-[11px] flex items-center justify-center gap-1 cursor-pointer transition-all';
+                    if (sub) sub.innerText = '🏷️ โหมดอ่านฉลากสินค้า ฉลากยา เอกสาร และเบอร์โทรศัพท์ (AI FOR THAI OCR)';
+                    AudioEngine.speak('เปิดโหมดอ่านฉลากสินค้า ฉลากยา และเอกสารแล้วครับ กรุณานำสินค้าหรือเอกสารมาจ่อหน้ากล้อง', true);
+                    this.runSignOcr(true);
+                } else {
+                    if (btn) btn.className = 'min-h-[44px] px-1.5 py-2 rounded-xl bg-teal-500/20 hover:bg-teal-500/30 border border-tealAccent/50 text-tealAccent font-semibold text-[11px] flex items-center justify-center gap-1 cursor-pointer transition-all';
+                    if (sub) sub.innerText = 'ตีกรอบตามพิกัดจริง • แยกรูปทรงบนโต๊ะ • อ่านเบอร์โทร/สินค้า';
+                    AudioEngine.speak('กลับสู่โหมดส่องกล้องตรวจจับสิ่งกีดขวางปกติแล้วครับ', true);
+                }
+            },
+
             togglePause() {
                 this.isPaused = !this.isPaused;
                 const iconEl = document.getElementById('pause-scan-icon');
@@ -2438,6 +2519,7 @@
 
             async detectFrame(manualTrigger = false) {
                 if (this.isPaused) return;
+                if (this.isProductLabelMode && !manualTrigger) return;
                 const video = document.getElementById('hazard-video');
                 const overlay = document.getElementById('hazard-overlay-canvas');
                 const scanStatus = document.getElementById('hazard-scan-status');
@@ -2494,7 +2576,7 @@
                         const distM = item.distM;
                         const distSpeech = this.formatMetersSpeech(distM);
 
-                        if (distM <= 1.2) hasImmediateCollisionRisk = true;
+                        if (distM <= 1.5) hasImmediateCollisionRisk = true;
 
                         const centerX = (x + (w / 2)) / overlay.width;
                         let directionText = 'ตรงหน้า';
@@ -2556,7 +2638,7 @@
                             if (autoItem) {
                                 const [bx, by, bw, bh] = autoItem.bbox;
                                 const distM = this.estimateDistanceMeters(bh, overlay.height, autoItem.realHeightM);
-                                if (distM <= 1.2) hasImmediateCollisionRisk = true;
+                                if (distM <= 1.5) hasImmediateCollisionRisk = true;
 
                                 const shapePrefix = tableShape ? `วัตถุ${tableShape.shapeType} ` : '';
                                 this.drawKrobBoundingBox(ctx, bx, by, bw, bh, `${autoItem.name} ${distM.toFixed(1)}ม.`, 0.72, boxIndex++, '#a855f7');
@@ -2607,8 +2689,12 @@
                         if (manualTrigger || (!AudioEngine.isSpeaking && elapsedSinceLastAlert >= cooldownRequired)) {
                             this.lastAlertText = finalAlertText;
                             this.lastAlertTime = now;
-                            if (hasImmediateCollisionRisk) Haptic.warn();
-                            AudioEngine.speak(finalAlertText, manualTrigger);
+                            if (hasImmediateCollisionRisk) {
+                                Haptic.warn();
+                                AudioEngine.speakOfflinePriority(finalAlertText, true);
+                            } else {
+                                AudioEngine.speak(finalAlertText, manualTrigger);
+                            }
                         }
                     } else if (!this.latestSignText || Date.now() >= this.latestSignExpires) {
                         badgesContainer.innerHTML = '<span class="text-xs text-tealAccent">เส้นทางโล่ง ไม่พบสิ่งกีดขวาง</span>';
@@ -2687,19 +2773,20 @@
                     }
 
                     if (rawText) {
-                        // 1. ตรวจจับหมายเลขโทรศัพท์อัตโนมัติ (08x, 09x, 06x, 02-xxx-xxxx)
-                        const phoneMatch = rawText.match(/(0[689]\d[\s-]?\d{3}[\s-]?\d{4}|02[\s-]?\d{3}[\s-]?\d{4})/);
+                        // 1. ตรวจจับหมายเลขโทรศัพท์อัตโนมัติด้วย Regular Expression ตามข้อ 19
+                        const phoneMatches = rawText.match(/0[689]\d{1}-?\d{3}-?\d{4}|02-?\d{3}-?\d{4}/g);
                         const phoneBox = document.getElementById('detected-phone-action-box');
-                        if (phoneMatch) {
-                            const cleanDial = phoneMatch[0].replace(/[\s-]/g, '');
+                        if (phoneMatches && phoneMatches.length > 0) {
+                            const foundPhone = phoneMatches[0];
+                            const cleanDial = foundPhone.replace(/-/g, '');
                             this.detectedPhoneNumber = cleanDial;
-                            document.getElementById('detected-phone-label').innerText = phoneMatch[0];
+                            document.getElementById('detected-phone-label').innerText = foundPhone;
                             document.getElementById('btn-call-detected-phone').href = `tel:${cleanDial}`;
                             phoneBox.classList.remove('hidden');
 
-                            const phoneMsg = `พบหมายเลขโทรศัพท์ ${phoneMatch[0].split('').join(' ')} สามารถกดปุ่มโทรออกได้ทันทีครับ`;
-                            this.latestSignText = `📞 เบอร์โทร: ${phoneMatch[0]}`;
-                            this.latestSignExpires = Date.now() + 8000;
+                            const phoneMsg = `พบหมายเลขโทรศัพท์ ${foundPhone} ต้องการโทรออกหรือไม่ สามารถกดปุ่มโทรออกด้านล่างได้ทันทีครับ`;
+                            this.latestSignText = `📞 เบอร์โทร: ${foundPhone}`;
+                            this.latestSignExpires = Date.now() + 8500;
                             document.getElementById('hazard-alert-text').innerText = phoneMsg;
 
                             if (manualTrigger || (!AudioEngine.isSpeaking && (Date.now() - this.lastAlertTime > 5200))) {
@@ -2710,14 +2797,21 @@
                             return;
                         }
 
-                        // 2. อ่านป้ายเตือน ยี่ห้อสินค้า และข้อความประกาศ (รองรับทั้งภาษาไทยและชื่อแบรนด์อังกฤษ)
-                        const readableText = UI.sanitizeReadableText(rawText, '', true);
+                        // 2. อ่านป้ายเตือน ยี่ห้อสินค้า ฉลากยา และข้อความประกาศ (ถ้าเป็นภาษาอังกฤษส่งให้ AI FOR THAI แปลเป็นไทย)
+                        let readableText = UI.sanitizeReadableText(rawText, '', true);
                         if (readableText.length >= 2) {
+                            const hasOnlyEnglish = /^[a-zA-Z0-9\s\-]+$/.test(readableText) && /[a-zA-Z]{2,}/.test(readableText);
+                            if (hasOnlyEnglish && navigator.onLine) {
+                                const thaiTranslated = await MemorySystem.translateOnlineWithAiForThai(readableText);
+                                if (thaiTranslated) {
+                                    readableText = `${readableText} (${thaiTranslated})`;
+                                }
+                            }
                             const matchedRule = STRICT_SIGN_RULES.find(r => r.keywords.some(kw => readableText.includes(kw)));
-                            const labelHeader = matchedRule ? matchedRule.type : 'ข้อความ/ยี่ห้อสินค้า';
-                            const labelIcon = matchedRule ? matchedRule.icon : '🏷️';
+                            const labelHeader = this.isProductLabelMode ? 'ฉลากสินค้า/เอกสาร' : (matchedRule ? matchedRule.type : 'ข้อความ/ยี่ห้อสินค้า');
+                            const labelIcon = this.isProductLabelMode ? '🏷️' : (matchedRule ? matchedRule.icon : '🪧');
 
-                            const signMsg = `อ่านพบ${labelHeader}: ${readableText.slice(0, 55)}`;
+                            const signMsg = `อ่านพบ${labelHeader}: ${readableText.slice(0, 65)}`;
                             this.latestSignText = `${labelIcon} ${signMsg}`;
                             this.latestSignExpires = Date.now() + 7000;
                             document.getElementById('hazard-alert-text').innerText = signMsg;
@@ -3687,13 +3781,22 @@
                 const familyContacts = MemorySystem.trainedMeta.filter(m => m.category === 'PERSON' && m.phone);
                 if (familyContacts.length > 0 && familyBox && familyBtns) {
                     familyBtns.innerHTML = '';
-                    familyContacts.forEach(person => {
-                        const a = document.createElement('a');
-                        a.href = `tel:${person.phone}`;
-                        a.onclick = () => Haptic.sos();
-                        a.className = 'min-h-[46px] px-3.5 py-2 rounded-xl bg-sky-500/25 hover:bg-sky-500/35 border border-skyAccent/60 text-white font-bold text-sm flex items-center justify-between';
-                        a.innerHTML = `<span>📞 โทรหา ${person.displayName} (${person.relation})</span><span class="font-mono text-skyAccent text-xs">${person.phone}</span>`;
-                        familyBtns.appendChild(a);
+                    familyContacts.forEach((person, idx) => {
+                        const row = document.createElement('div');
+                        row.className = 'grid grid-cols-3 gap-1.5';
+                        const badge1 = idx === 0 ? '⭐ ' : '';
+                        row.innerHTML = `
+                            <a href="tel:${person.phone}" onclick="Haptic.sos()"
+                                class="col-span-2 min-h-[48px] px-3 py-2 rounded-xl bg-sky-500/30 hover:bg-sky-500/40 border border-skyAccent/70 text-white font-bold text-xs sm:text-sm flex items-center justify-between">
+                                <span class="truncate">${badge1}📞 โทรหา ${person.displayName}</span>
+                                <span class="font-mono text-skyAccent text-[11px] shrink-0">${person.phone}</span>
+                            </a>
+                            <a href="sms:${person.phone}?body=${encodeURIComponent('🆘 ขอความช่วยเหลือด่วน! ฉันอยู่ที่ ' + (this.userCoords ? `https://www.google.com/maps?q=${this.userCoords.lat},${this.userCoords.lng}` : 'กรุณาโทรกลับทันที'))}" onclick="Haptic.sos()"
+                                class="min-h-[48px] px-2 py-2 rounded-xl bg-amber-500/25 hover:bg-amber-500/35 border border-amber-400/60 text-amber-200 font-bold text-xs flex items-center justify-center text-center">
+                                💬 SMS พิกัด
+                            </a>
+                        `;
+                        familyBtns.appendChild(row);
                     });
                     familyBox.classList.remove('hidden');
                 } else if (familyBox) {
