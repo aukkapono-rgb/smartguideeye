@@ -8,7 +8,7 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#0b0f17">
 
-    <title>Smart Guide Eye v11 - AI FOR THAI, ตรวจจับทรงวัตถุ, อ่านป้าย/เบอร์โทร &amp; นำทาง</title>
+    <title>Smart Guide Eye v12 - AI FOR THAI, ตรวจจับทรงวัตถุ, อ่านป้าย/เบอร์โทร &amp; นำทาง</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- TensorFlow.js, COCO-SSD, MobileNet & KNN Classifier -->
@@ -126,8 +126,8 @@
                     </svg>
                 </div>
                 <div>
-                    <h1 class="text-lg sm:text-xl font-semibold text-textPrimary tracking-tight">Smart Guide Eye <span class="text-xs text-goldAccent font-normal">v11</span></h1>
-                    <p class="text-[11px] text-textSecondary mt-0.5">AI FOR THAI • แยกรูปทรงวัตถุ • อ่านป้าย/เบอร์โทร • พักจอประหยัดแบต</p>
+                    <h1 class="text-lg sm:text-xl font-semibold text-textPrimary tracking-tight">Smart Guide Eye <span class="text-xs text-goldAccent font-normal">v12</span></h1>
+                    <p class="text-[11px] text-textSecondary mt-0.5">AI FOR THAI • แยกรูปทรงวัตถุ • อ่านป้าย/เบอร์โทร • ปิดโหมดพักจอชั่วคราว</p>
                 </div>
             </div>
 
@@ -300,7 +300,7 @@
         <section class="mt-3 bg-obsidian/75 border border-borderLuxury rounded-2xl p-3" aria-live="polite">
             <div class="flex items-center gap-2.5 text-xs text-textSecondary">
                 <span class="w-2 h-2 rounded-full bg-goldAccent shrink-0" aria-hidden="true"></span>
-                <span id="status" class="leading-relaxed">พร้อมใช้งาน v11: พักหน้าจออัตโนมัติใน 5 วิ (แตะจอ 2 ครั้งเพื่อเปิด)</span>
+                <span id="status" class="leading-relaxed">พร้อมใช้งาน v12: แสดงผลหน้าจอตลอดเวลา (ปิดระบบพักหน้าจอ 5 วินาทีแล้ว)</span>
             </div>
         </section>
 
@@ -823,7 +823,8 @@
             ENDPOINTS: {
                 THAI_OCR: "https://api.aiforthai.in.th/ocr",
                 VAJA9_TTS: "https://api.aiforthai.in.th/vaja9/synth_audiovisual",
-                EN_TO_TH: "https://api.aiforthai.in.th/xiaofan-en-th/en2th"
+                EN_TO_TH: "https://api.aiforthai.in.th/xiaofan-en-th/en2th",
+                OBJECT_DETECT: "https://api.aiforthai.in.th/t-rex/detect"
             },
             AI_MIN_CONFIDENCE: 0.65,          // เกณฑ์ความมั่นใจ 65%
             AUTO_RESEARCH_MIN_CONF: 0.22,     // เกณฑ์ตรวจจับเบื้องต้น
@@ -832,9 +833,10 @@
             OCR_INTERVAL_MS: 3600,            // รอบสแกนป้าย ยี่ห้อสินค้า และเบอร์โทร
             NATURAL_ALERT_COOLDOWN_MS: 5200,  // แจ้งเตือนอย่างเป็นธรรมชาติ ไม่ถี่จนน่ารำคาญ (5.2 วินาที)
             COLLISION_REPEAT_MS: 2200,        // เตือนซ้ำทันทีเมื่อเข้าใกล้ระยะอันตราย (< 1.2 ม.)
-            SCREEN_IDLE_DIM_MS: 5000,         // พักหน้าจออัตโนมัติหลังกดใช้งาน 5 วินาที
-            KNN_STORAGE_KEY: 'smart_guide_eye_knn_memory_v11',
-            LEGACY_STORAGE_KEYS: ['smart_guide_eye_knn_memory_v10', 'smart_guide_eye_knn_memory_v9'],
+            ENABLE_SCREEN_IDLE_DIM: false,    // ปิดระบบพักหน้าจอประหยัดพลังงาน 5 วินาทีไว้ชั่วคราวใน v12
+            SCREEN_IDLE_DIM_MS: 5000,         // (สำรอง) พักหน้าจออัตโนมัติหลังกดใช้งาน 5 วินาที
+            KNN_STORAGE_KEY: 'smart_guide_eye_knn_memory_v12',
+            LEGACY_STORAGE_KEYS: ['smart_guide_eye_knn_memory_v11', 'smart_guide_eye_knn_memory_v10', 'smart_guide_eye_knn_memory_v9'],
             BACKGROUND_CLASS_KEY: 'BACKGROUND::NORMAL_PATH'
         };
 
@@ -939,7 +941,7 @@
                 document.body.appendChild(overlay);
                 this.overlayEl = overlay;
 
-                // จับจังหวะ Double Tap บนหน้าจอดำ
+                // จับจังหวะ Double Tap บนหน้าจอดำ (ทำงานเฉพาะเมื่อเปิดโหมดพักหน้าจอ)
                 overlay.addEventListener('touchend', (e) => {
                     e.preventDefault();
                     this.handleDoubleTapCheck();
@@ -948,22 +950,23 @@
                     this.handleDoubleTapCheck();
                 });
 
-                // รีเซ็ตเวลานับถอยหลัง 5 วินาทีทุกครั้งที่มีการกดใช้งานหน้าจอ
-                ['touchstart', 'click', 'keydown'].forEach(evt => {
-                    document.addEventListener(evt, () => {
-                        if (!this.isScreenDimmed) {
-                            this.resetIdleTimer();
-                        }
-                    }, { passive: true });
-                });
-
-                // ร้องขอ Wake Lock กันเครื่องล็อกหน้าจอขณะเดิน
+                // ร้องขอ Wake Lock กันเครื่องล็อกหน้าจอขณะเดิน (เปิดใช้งานตลอดเวลา)
                 this.requestWakeLock();
                 document.addEventListener('visibilitychange', () => {
                     if (document.visibilityState === 'visible') this.requestWakeLock();
                 });
 
-                this.resetIdleTimer();
+                // ปิดระบบนับถอยหลังพักหน้าจอ 5 วินาที (Double-Tap) ใน v12 ตามที่กำหนด
+                if (APP_CONFIG.ENABLE_SCREEN_IDLE_DIM) {
+                    ['touchstart', 'click', 'keydown'].forEach(evt => {
+                        document.addEventListener(evt, () => {
+                            if (!this.isScreenDimmed) {
+                                this.resetIdleTimer();
+                            }
+                        }, { passive: true });
+                    });
+                    this.resetIdleTimer();
+                }
             },
 
             async requestWakeLock() {
@@ -985,6 +988,7 @@
             },
 
             dimScreen() {
+                if (!APP_CONFIG.ENABLE_SCREEN_IDLE_DIM) return;
                 if (this.isScreenDimmed) return;
                 this.isScreenDimmed = true;
                 this.overlayEl.classList.remove('hidden');
@@ -1105,10 +1109,15 @@
                     const audioEl = document.getElementById('global-thai-audio-player');
                     if (audioEl) {
                         audioEl.src = 'data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA';
-                        audioEl.play().then(() => {
-                            audioEl.pause();
+                        const playPromise = audioEl.play();
+                        if (playPromise !== undefined) {
+                            playPromise.then(() => {
+                                audioEl.pause();
+                                this.isUnlocked = true;
+                            }).catch(() => { this.isUnlocked = true; });
+                        } else {
                             this.isUnlocked = true;
-                        }).catch(() => {});
+                        }
                     }
                     if ('speechSynthesis' in window) {
                         const silentUtter = new SpeechSynthesisUtterance('');
@@ -1178,7 +1187,8 @@
                     clearTimeout(timerId);
                     if (!response.ok) return null;
                     const data = await response.json();
-                    return data.wav_url || data.audio_url || data.url || null;
+                    const rawUrl = data.wav_url || data.audio_url || data.url || null;
+                    return rawUrl ? rawUrl.replace(/^http:\/\//i, 'https://') : null;
                 } catch (e) {
                     clearTimeout(timerId);
                     return null;
@@ -1612,13 +1622,11 @@
                 const timerId = setTimeout(() => controller.abort(), 1200);
                 try {
                     const cleanEn = englishWord.split(',')[0].replace(/_/g, ' ').trim();
-                    const response = await fetch(APP_CONFIG.ENDPOINTS.EN_TO_TH, {
-                        method: 'POST',
+                    const response = await fetch(`${APP_CONFIG.ENDPOINTS.EN_TO_TH}?text=${encodeURIComponent(cleanEn)}`, {
+                        method: 'GET',
                         headers: {
-                            'Apikey': APP_CONFIG.AI_FOR_THAI_API_KEY,
-                            'Content-Type': 'application/json'
+                            'Apikey': APP_CONFIG.AI_FOR_THAI_API_KEY
                         },
-                        body: JSON.stringify({ text: cleanEn }),
                         signal: controller.signal
                     });
                     clearTimeout(timerId);
@@ -1975,7 +1983,7 @@
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = `smart_guide_eye_secure_v11_${new Date().toISOString().slice(0, 10)}.json`;
+                a.download = `smart_guide_eye_secure_v12_${new Date().toISOString().slice(0, 10)}.json`;
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
@@ -2505,8 +2513,9 @@
                                 cropCanvas.width = 160;
                                 cropCanvas.height = 160;
                                 const fctx = cropCanvas.getContext('2d');
-                                const cropH = item.class === 'person' ? Math.min(h, h * 0.62) : h;
-                                fctx.drawImage(video, x, y, w, cropH, 0, 0, 160, 160);
+                                const safeW = Math.max(4, w);
+                                const safeH = Math.max(4, item.class === 'person' ? Math.min(h, h * 0.62) : h);
+                                fctx.drawImage(video, Math.max(0, x), Math.max(0, y), safeW, safeH, 0, 0, 160, 160);
 
                                 const targetCat = item.class === 'person' ? 'PERSON' : 'OBJECT';
                                 const match = await MemorySystem.predictFromCroppedRegion(cropCanvas, targetCat);
@@ -3653,10 +3662,14 @@
                     ? `https://www.google.com/maps?q=${this.currentModalData.lat},${this.currentModalData.lng}`
                     : '';
                 const text = `${this.currentModalData.announcement}\nพิกัด: ${this.currentModalData.coordsText}\n${mapUrl}`.trim();
-                navigator.clipboard.writeText(text).then(() => {
-                    UI.showToast('คัดลอกข้อมูลสถานที่แล้ว');
-                    AudioEngine.speak('คัดลอกข้อมูลสถานที่เรียบร้อยแล้วครับ', true);
-                });
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(text).then(() => {
+                        UI.showToast('คัดลอกข้อมูลสถานที่แล้ว');
+                        AudioEngine.speak('คัดลอกข้อมูลสถานที่เรียบร้อยแล้วครับ', true);
+                    }).catch(() => UI.showToast('คัดลอกข้อมูลเรียบร้อย'));
+                } else {
+                    UI.showToast('คัดลอกข้อมูลเรียบร้อย');
+                }
             },
 
             // --- ระบบ SOS ขอความช่วยเหลือฉุกเฉิน + โทรด่วนคนในครอบครัวที่บันทึกเบอร์ไว้ ---
